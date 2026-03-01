@@ -1,0 +1,260 @@
+import type { Bus, BusStatus, BusTiming, Route } from "../backend.d";
+
+// ── Demo Routes ────────────────────────────────────────
+export const DEMO_ROUTES: Route[] = [
+  {
+    id: "route-1",
+    name: "Rohtak → Hisar",
+    fromStop: "Rohtak",
+    toStop: "Hisar",
+    stops: ["Rohtak", "Jhajjar", "Bhiwani", "Hisar"],
+  },
+  {
+    id: "route-2",
+    name: "Gurugram → Chandigarh",
+    fromStop: "Gurugram",
+    toStop: "Chandigarh",
+    stops: ["Gurugram", "Manesar", "Rewari", "Ambala", "Chandigarh"],
+  },
+  {
+    id: "route-3",
+    name: "Panipat → Delhi",
+    fromStop: "Panipat",
+    toStop: "Delhi",
+    stops: ["Panipat", "Sonipat", "Bahadurgarh", "Delhi"],
+  },
+];
+
+// ── Helper to generate nanosecond timestamps ───────────
+function timeFromHHMM(hh: number, mm: number): bigint {
+  const now = new Date();
+  now.setHours(hh, mm, 0, 0);
+  return BigInt(now.getTime()) * BigInt(1_000_000);
+}
+
+// ── Demo Bus Timings ───────────────────────────────────
+export const DEMO_TIMINGS: BusTiming[] = [
+  // Route 1 - Rohtak → Hisar
+  {
+    id: "timing-1a",
+    busId: "bus-1",
+    routeId: "route-1",
+    departureTime: timeFromHHMM(6, 0),
+    arrivalTime: timeFromHHMM(9, 30),
+  },
+  {
+    id: "timing-1b",
+    busId: "bus-2",
+    routeId: "route-1",
+    departureTime: timeFromHHMM(10, 30),
+    arrivalTime: timeFromHHMM(14, 0),
+  },
+  {
+    id: "timing-1c",
+    busId: "bus-3",
+    routeId: "route-1",
+    departureTime: timeFromHHMM(15, 0),
+    arrivalTime: timeFromHHMM(18, 30),
+  },
+  // Route 2 - Gurugram → Chandigarh
+  {
+    id: "timing-2a",
+    busId: "bus-4",
+    routeId: "route-2",
+    departureTime: timeFromHHMM(7, 0),
+    arrivalTime: timeFromHHMM(11, 30),
+  },
+  {
+    id: "timing-2b",
+    busId: "bus-5",
+    routeId: "route-2",
+    departureTime: timeFromHHMM(12, 0),
+    arrivalTime: timeFromHHMM(16, 30),
+  },
+  {
+    id: "timing-2c",
+    busId: "bus-6",
+    routeId: "route-2",
+    departureTime: timeFromHHMM(17, 0),
+    arrivalTime: timeFromHHMM(21, 30),
+  },
+  // Route 3 - Panipat → Delhi
+  {
+    id: "timing-3a",
+    busId: "bus-7",
+    routeId: "route-3",
+    departureTime: timeFromHHMM(5, 30),
+    arrivalTime: timeFromHHMM(8, 0),
+  },
+  {
+    id: "timing-3b",
+    busId: "bus-8",
+    routeId: "route-3",
+    departureTime: timeFromHHMM(11, 0),
+    arrivalTime: timeFromHHMM(13, 30),
+  },
+  {
+    id: "timing-3c",
+    busId: "bus-9",
+    routeId: "route-3",
+    departureTime: timeFromHHMM(16, 30),
+    arrivalTime: timeFromHHMM(19, 0),
+  },
+];
+
+// ── Demo Buses ─────────────────────────────────────────
+export const DEMO_BUSES: Bus[] = [
+  {
+    id: "bus-1",
+    busNumber: "HR-10-PA-0231",
+    driverID: "DRV-2041",
+    conductorID: "CND-3082",
+    busType: "Non-AC Volvo",
+    routeId: "route-1",
+    status: "OnTime" as BusStatus,
+    speed: 62,
+    currentStopIndex: BigInt(1),
+  },
+  {
+    id: "bus-2",
+    busNumber: "HR-55-AB-1190",
+    driverID: "DRV-2058",
+    conductorID: "CND-3095",
+    busType: "AC Express",
+    routeId: "route-1",
+    status: "Delayed" as BusStatus,
+    speed: 45,
+    currentStopIndex: BigInt(0),
+  },
+  {
+    id: "bus-3",
+    busNumber: "HR-29-C-4455",
+    driverID: "DRV-2063",
+    conductorID: "CND-3110",
+    busType: "Non-AC Ordinary",
+    routeId: "route-1",
+    status: "OnTime" as BusStatus,
+    speed: 55,
+    currentStopIndex: BigInt(2),
+  },
+  {
+    id: "bus-4",
+    busNumber: "HR-26-AB-5567",
+    driverID: "DRV-2071",
+    conductorID: "CND-3121",
+    busType: "AC Volvo",
+    routeId: "route-2",
+    status: "OnTime" as BusStatus,
+    speed: 70,
+    currentStopIndex: BigInt(1),
+  },
+  {
+    id: "bus-5",
+    busNumber: "HR-12-CA-3301",
+    driverID: "DRV-2085",
+    conductorID: "CND-3137",
+    busType: "Non-AC Express",
+    routeId: "route-2",
+    status: "OnTime" as BusStatus,
+    speed: 60,
+    currentStopIndex: BigInt(2),
+  },
+  {
+    id: "bus-6",
+    busNumber: "HR-09-XB-7823",
+    driverID: "DRV-2092",
+    conductorID: "CND-3148",
+    busType: "AC Express",
+    routeId: "route-2",
+    status: "Delayed" as BusStatus,
+    speed: 38,
+    currentStopIndex: BigInt(0),
+  },
+  {
+    id: "bus-7",
+    busNumber: "HR-07-PA-9910",
+    driverID: "DRV-2103",
+    conductorID: "CND-3162",
+    busType: "Non-AC Ordinary",
+    routeId: "route-3",
+    status: "OnTime" as BusStatus,
+    speed: 65,
+    currentStopIndex: BigInt(1),
+  },
+  {
+    id: "bus-8",
+    busNumber: "HR-44-BB-2234",
+    driverID: "DRV-2118",
+    conductorID: "CND-3175",
+    busType: "AC Volvo",
+    routeId: "route-3",
+    status: "OnTime" as BusStatus,
+    speed: 75,
+    currentStopIndex: BigInt(0),
+  },
+  {
+    id: "bus-9",
+    busNumber: "HR-19-CC-6678",
+    driverID: "DRV-2126",
+    conductorID: "CND-3189",
+    busType: "Non-AC Express",
+    routeId: "route-3",
+    status: "Cancelled" as BusStatus,
+    speed: 0,
+    currentStopIndex: BigInt(0),
+  },
+];
+
+// ── Helper functions ───────────────────────────────────
+export function formatTime(nanoseconds: bigint): string {
+  const ms = Number(nanoseconds) / 1_000_000;
+  const date = new Date(ms);
+  return date.toLocaleTimeString("en-IN", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
+}
+
+export function getRouteById(id: string, routes: Route[]): Route | undefined {
+  return routes.find((r) => r.id === id);
+}
+
+export function getBusById(id: string, buses: Bus[]): Bus | undefined {
+  return buses.find((b) => b.id === id);
+}
+
+export function findRouteForStops(
+  fromStop: string,
+  toStop: string,
+  routes: Route[],
+): Route | undefined {
+  return routes.find((r) => {
+    const fromIdx = r.stops.indexOf(fromStop);
+    const toIdx = r.stops.indexOf(toStop);
+    return fromIdx !== -1 && toIdx !== -1 && fromIdx < toIdx;
+  });
+}
+
+export function getAllStops(routes: Route[]): string[] {
+  const stops = new Set<string>();
+  for (const r of routes) {
+    for (const s of r.stops) {
+      stops.add(s);
+    }
+  }
+  return Array.from(stops).sort();
+}
+
+export function getStatusColor(status: string): string {
+  switch (status) {
+    case "OnTime":
+      return "status-ontime";
+    case "Delayed":
+      return "status-delayed";
+    case "Cancelled":
+      return "status-cancelled";
+    default:
+      return "status-ontime";
+  }
+}
