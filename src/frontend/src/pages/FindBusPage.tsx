@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useNavigate } from "@tanstack/react-router";
-import { ArrowRight, Info, Loader2, MapPin, Navigation } from "lucide-react";
+import { ArrowRight, Info, Loader2, MapPin, Navigation, Search } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -19,6 +19,10 @@ import { DEMO_ROUTES, findRouteForStops, getAllStops } from "../utils/demoData";
 export function FindBusPage() {
   const [fromStop, setFromStop] = useState("");
   const [toStop, setToStop] = useState("");
+  // search terms used to filter options in the dropdowns
+  const [fromSearch, setFromSearch] = useState("");
+  const [toSearch, setToSearch] = useState("");
+
   const navigate = useNavigate();
 
   const { data: backendRoutes, isLoading } = useGetAllRoutes();
@@ -31,6 +35,14 @@ export function FindBusPage() {
         .flatMap((r) => r.stops.slice(r.stops.indexOf(fromStop) + 1))
         .filter((v, i, a) => a.indexOf(v) === i)
     : allStops;
+
+  // apply search filters to the available stop lists
+  const filteredFromStops = allStops.filter((stop) =>
+    stop.toLowerCase().includes(fromSearch.toLowerCase()),
+  );
+  const filteredToStops = toStops.filter((stop) =>
+    stop.toLowerCase().includes(toSearch.toLowerCase()),
+  );
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -106,13 +118,27 @@ export function FindBusPage() {
                     onValueChange={(v) => {
                       setFromStop(v);
                       setToStop("");
+                      setFromSearch("");
+                      setToSearch("");
                     }}
                   >
                     <SelectTrigger className="font-body h-11">
                       <SelectValue placeholder="Select departure stop" />
                     </SelectTrigger>
                     <SelectContent>
-                      {allStops.map((stop) => (
+                      <div className="p-2">
+                        <div className="relative">
+                          <input
+                            type="text"
+                            placeholder="Search stops..."
+                            value={fromSearch}
+                            onChange={(e) => setFromSearch(e.target.value)}
+                            className="w-full border border-input rounded px-2 py-1 text-sm"
+                          />
+                          <Search className="absolute right-2 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                        </div>
+                      </div>
+                      {filteredFromStops.map((stop) => (
                         <SelectItem
                           key={stop}
                           value={stop}
@@ -158,7 +184,20 @@ export function FindBusPage() {
                       />
                     </SelectTrigger>
                     <SelectContent>
-                      {toStops.map((stop) => (
+                      {/* search box for destination stops */}
+                      <div className="p-2">
+                        <div className="relative">
+                          <input
+                            type="text"
+                            placeholder="Search stops..."
+                            value={toSearch}
+                            onChange={(e) => setToSearch(e.target.value)}
+                            className="w-full border border-input rounded px-2 py-1 text-sm"
+                          />
+                          <Search className="absolute right-2 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                        </div>
+                      </div>
+                      {filteredToStops.map((stop) => (
                         <SelectItem
                           key={stop}
                           value={stop}

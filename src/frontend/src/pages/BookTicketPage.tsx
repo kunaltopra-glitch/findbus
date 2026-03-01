@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useNavigate } from "@tanstack/react-router";
-import { ArrowRight, Info, MapPin, Ticket } from "lucide-react";
+import { ArrowRight, Info, MapPin, Ticket, Search } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -26,6 +26,8 @@ const TICKET_BENEFITS = [
 export function BookTicketPage() {
   const [fromStop, setFromStop] = useState("");
   const [toStop, setToStop] = useState("");
+  const [fromSearch, setFromSearch] = useState("");
+  const [toSearch, setToSearch] = useState("");
   const navigate = useNavigate();
 
   const { data: backendRoutes } = useGetAllRoutes();
@@ -38,6 +40,13 @@ export function BookTicketPage() {
         .flatMap((r) => r.stops.slice(r.stops.indexOf(fromStop) + 1))
         .filter((v, i, a) => a.indexOf(v) === i)
     : allStops;
+
+  const filteredFromStops = allStops.filter((stop) =>
+    stop.toLowerCase().includes(fromSearch.toLowerCase()),
+  );
+  const filteredToStops = toStops.filter((stop) =>
+    stop.toLowerCase().includes(toSearch.toLowerCase()),
+  );
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -111,13 +120,27 @@ export function BookTicketPage() {
                       onValueChange={(v) => {
                         setFromStop(v);
                         setToStop("");
+                        setFromSearch("");
+                        setToSearch("");
                       }}
                     >
                       <SelectTrigger className="font-body h-11">
                         <SelectValue placeholder="Select boarding stop" />
                       </SelectTrigger>
                       <SelectContent>
-                        {allStops.map((stop) => (
+                        <div className="p-2">
+                          <div className="relative">
+                            <input
+                              type="text"
+                              placeholder="Search stops..."
+                              value={fromSearch}
+                              onChange={(e) => setFromSearch(e.target.value)}
+                              className="w-full border border-input rounded px-2 py-1 text-sm"
+                            />
+                            <Search className="absolute right-2 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                          </div>
+                        </div>
+                        {filteredFromStops.map((stop) => (
                           <SelectItem
                             key={stop}
                             value={stop}
@@ -161,7 +184,19 @@ export function BookTicketPage() {
                         />
                       </SelectTrigger>
                       <SelectContent>
-                        {toStops.map((stop) => (
+                        <div className="p-2">
+                          <div className="relative">
+                            <input
+                              type="text"
+                              placeholder="Search stops..."
+                              value={toSearch}
+                              onChange={(e) => setToSearch(e.target.value)}
+                              className="w-full border border-input rounded px-2 py-1 text-sm"
+                            />
+                            <Search className="absolute right-2 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                          </div>
+                        </div>
+                        {filteredToStops.map((stop) => (
                           <SelectItem
                             key={stop}
                             value={stop}
