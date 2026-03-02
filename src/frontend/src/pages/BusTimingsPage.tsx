@@ -67,7 +67,7 @@ export function BusTimingsPage() {
                 Bus Timings
               </span>
             </div>
-            <h1 className="font-display font-extrabold text-3xl sm:text-4xl text-white mb-2">
+            <h1 className="font-display font-extrabold text-3xl sm:text-4xl text-blue-300 mb-2">
               {route?.name ?? "Route Timings"}
             </h1>
             {route && (

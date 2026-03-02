@@ -160,7 +160,7 @@ export function BusDetailsPage() {
                     Live Bus Details
                   </span>
                 </div>
-                <h1 className="font-display font-extrabold text-3xl text-white">
+                <h1 className="font-display font-extrabold text-3xl text-blue-300">
                   {bus.busNumber}
                 </h1>
                 <p className="text-[oklch(0.75_0.04_250)] font-body mt-1">
