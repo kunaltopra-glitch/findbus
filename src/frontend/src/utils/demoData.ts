@@ -53,14 +53,14 @@ export const DEMO_ROUTES: Route[] = [
   }, 
   {
     id: "route-8",
-    name: "Saraswati Nagar → Yamunanagar",
+    name: "Saraswati Nagar → Yamunanagar Via Harnaul",
     fromStop: "Saraswati Nagar",
     toStop: "Yamunanagar",
     stops: ["Saraswati Nagar", "Kajibans", "Rapoli", "Satgoli", "Masana", "Kheri Lakha Singh", "Sagri", "Topra Kalan", "Ismailpur", "Badanpuri", "Chhota Topra", "Harnaul", "Gohlanpur", "Mandebar", "Jorion", "Vishwakarma Chowk", "Yamunanagar"],
   }, 
 {
     id: "route-9",
-    name: "Saraswati Nagar → Yamunanagar",
+    name: "Saraswati Nagar → Yamunanagar Via Harnaul",
     fromStop: "Saraswati Nagar",
     toStop: "Yamunanagar",
     stops: ["Saraswati Nagar", "Ghari", "Bhogpur", "Hartan", "Antawa", "Kheri Lakha Singh", "Sagri", "Topra Kalan", "Ismailpur", "Badanpuri", "Chhota Topra", "Harnaul", "Gohlanpur", "Mandebar", "Jorion", "Vishwakarma Chowk", "Yamunanagar"],
@@ -74,7 +74,7 @@ export const DEMO_ROUTES: Route[] = [
   },
   {
     id: "route-11",
-    name: "Saraswati Nagar → Yamunanagar",
+    name: "Saraswati Nagar → Yamunanagar Via Hafizpur",
     fromStop: "Saraswati Nagar",
     toStop: "Yamunanagar",
     stops: ["Saraswati Nagar", "Kajibans", "Rapoli", "Satgoli", "Masana", "Kheri Lakha Singh", "Sagri", "Nagla", "Jhaguri", "Ismailpur", "Hafizpur", "Retgarh", "Harnaul", "Gohlanpur", "Mandebar", "Jorion", "Vishwakarma Chowk", "Yamunanagar"],
@@ -393,7 +393,7 @@ export const DEMO_BUSES: Bus[] = [
     routeId: "route-8",
     status: "Delayed" as BusStatus,
     speed: 62,
-    currentStopIndex: BigInt(1),
+    currentStopIndex: BigInt(0),
   },
   {
     id: "bus-15", 
