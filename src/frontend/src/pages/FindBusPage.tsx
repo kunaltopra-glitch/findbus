@@ -1,20 +1,94 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useNavigate } from "@tanstack/react-router";
-import { ArrowRight, Info, Loader2, MapPin, Navigation, Search } from "lucide-react";
+import { ArrowRight, ChevronDown, Info, Loader2, MapPin, Navigation, Search } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
 import { toast } from "sonner";
 import type { Route } from "../backend.d";
 import { useGetAllRoutes } from "../hooks/useQueries";
 import { DEMO_ROUTES, findRouteForStops, getAllStops } from "../utils/demoData";
+
+function StopPicker({
+  value,
+  onChange,
+  options,
+  placeholder,
+  search,
+  setSearch,
+  disabled,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  options: string[];
+  placeholder?: string;
+  search: string;
+  setSearch: (s: string) => void;
+  disabled?: boolean;
+}) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <button
+          type="button"
+          disabled={disabled}
+          className={`font-body h-11 flex items-center justify-between gap-2 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm ${
+            disabled ? "opacity-50 cursor-not-allowed" : ""
+          }`}
+        >
+          <span className="text-left">
+            {value ? (
+              <span className="truncate">{value}</span>
+            ) : (
+              <span className="text-muted-foreground">{placeholder}</span>
+            )}
+          </span>
+          <ChevronDown className="w-4 h-4 text-muted-foreground" />
+        </button>
+      </PopoverTrigger>
+
+      <PopoverContent className="w-72 p-2">
+        <div className="p-1">
+          <div className="relative mb-2">
+            <input
+              type="text"
+              placeholder="Search stops..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full border border-input rounded px-2 py-1 text-sm"
+              onKeyDown={(e) => e.stopPropagation()}
+            />
+            <Search className="absolute right-2 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+          </div>
+
+          <div className="max-h-48 overflow-auto">
+            {options.length ? (
+              options.map((stop) => (
+                <button
+                  key={stop}
+                  type="button"
+                  onClick={() => {
+                    onChange(stop);
+                    setOpen(false);
+                  }}
+                  className="w-full text-left flex items-center gap-2 px-2 py-1 rounded hover:bg-accent"
+                >
+                  <MapPin className="w-3.5 h-3.5 text-muted-foreground" />
+                  <span className="text-sm">{stop}</span>
+                </button>
+              ))
+            ) : (
+              <div className="text-sm text-muted-foreground p-2">No stops</div>
+            )}
+          </div>
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+}
 
 export function FindBusPage() {
   const [fromStop, setFromStop] = useState("");
@@ -113,45 +187,19 @@ export function FindBusPage() {
                     <div className="w-2.5 h-2.5 rounded-full bg-[oklch(0.28_0.12_264)]" />
                     From Stop
                   </span>
-                  <Select
+                  <StopPicker
                     value={fromStop}
-                    onValueChange={(v) => {
+                    onChange={(v) => {
                       setFromStop(v);
                       setToStop("");
                       setFromSearch("");
                       setToSearch("");
                     }}
-                  >
-                    <SelectTrigger className="font-body h-11">
-                      <SelectValue placeholder="Select departure stop" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <div className="p-2">
-                        <div className="relative">
-                          <input
-                            type="text"
-                            placeholder="Search stops..."
-                            value={fromSearch}
-                            onChange={(e) => setFromSearch(e.target.value)}
-                            className="w-full border border-input rounded px-2 py-1 text-sm"
-                          />
-                          <Search className="absolute right-2 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-                        </div>
-                      </div>
-                      {filteredFromStops.map((stop) => (
-                        <SelectItem
-                          key={stop}
-                          value={stop}
-                          className="font-body"
-                        >
-                          <span className="flex items-center gap-2">
-                            <MapPin className="w-3.5 h-3.5 text-muted-foreground" />
-                            {stop}
-                          </span>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                    options={filteredFromStops}
+                    placeholder="Select departure stop"
+                    search={fromSearch}
+                    setSearch={setFromSearch}
+                  />
                 </div>
 
                 {/* Arrow divider */}
@@ -169,48 +217,17 @@ export function FindBusPage() {
                     <div className="w-2.5 h-2.5 rounded-full bg-[oklch(0.72_0.21_50)]" />
                     To Stop
                   </span>
-                  <Select
+                  <StopPicker
                     value={toStop}
-                    onValueChange={setToStop}
+                    onChange={(v) => setToStop(v)}
+                    options={filteredToStops}
+                    placeholder={
+                      fromStop ? "Select destination stop" : "Select From stop first"
+                    }
+                    search={toSearch}
+                    setSearch={setToSearch}
                     disabled={!fromStop}
-                  >
-                    <SelectTrigger className="font-body h-11">
-                      <SelectValue
-                        placeholder={
-                          fromStop
-                            ? "Select destination stop"
-                            : "Select From stop first"
-                        }
-                      />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {/* search box for destination stops */}
-                      <div className="p-2">
-                        <div className="relative">
-                          <input
-                            type="text"
-                            placeholder="Search stops..."
-                            value={toSearch}
-                            onChange={(e) => setToSearch(e.target.value)}
-                            className="w-full border border-input rounded px-2 py-1 text-sm"
-                          />
-                          <Search className="absolute right-2 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-                        </div>
-                      </div>
-                      {filteredToStops.map((stop) => (
-                        <SelectItem
-                          key={stop}
-                          value={stop}
-                          className="font-body"
-                        >
-                          <span className="flex items-center gap-2">
-                            <MapPin className="w-3.5 h-3.5 text-[oklch(0.72_0.21_50)]" />
-                            {stop}
-                          </span>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  />
                 </div>
 
                 <Button
