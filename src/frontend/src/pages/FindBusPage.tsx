@@ -149,7 +149,7 @@ export function FindBusPage() {
                 Route Search
               </span>
             </div>
-            <h1 className="font-display font-extrabold text-3xl sm:text-4xl text-white mb-3">
+            <h1 className="font-display font-extrabold text-3xl sm:text-4xl text-blue-300 mb-3">
               Find Your Bus
             </h1>
             <p className="text-[oklch(0.75_0.04_250)] font-body max-w-xl mx-auto">
