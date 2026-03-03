@@ -33,8 +33,12 @@ export type InternetIdentityContext = {
   /** Connect to Internet Identity to login the user. */
   login: () => void;
 
-  /** Clears the identity from the state and local storage. Effectively "logs the user out". */
-  clear: () => void;
+  /**
+   * Clears the identity from the state and local storage. Effectively "logs the user out".
+   * Returns a promise that resolves when the logout operation has finished. This allows callers
+   * to await the operation before performing additional navigation or cleanup.
+   */
+  clear: () => Promise<void>;
 
   /** The loginStatus of the login process. Note: The login loginStatus is not affected when a stored
    * identity is loaded on mount. */
@@ -207,28 +211,35 @@ export function InternetIdentityProvider({
     void authClient.login(options);
   }, [authClient, handleLoginError, handleLoginSuccess, setErrorMessage]);
 
-  const clear = useCallback(() => {
+  /**
+   * Clears the current identity and returns a promise that resolves when the
+   * underlying AuthClient logout has completed (or rejects on failure). This
+   * allows callers to await the logout process before performing additional
+   * navigation logic.
+   */
+  const clear = useCallback((): Promise<void> => {
     if (!authClient) {
       setErrorMessage("Auth client not initialized");
-      return;
+      return Promise.reject(new Error("Auth client not initialized"));
     }
 
-    void authClient
-      .logout()
-      .then(() => {
+    return authClient.logout().then(
+      () => {
         setIdentity(undefined);
         setAuthClient(undefined);
         setStatus("idle");
         setError(undefined);
-      })
-      .catch((unknownError: unknown) => {
+      },
+      (unknownError: unknown) => {
         setStatus("loginError");
-        setError(
+        const err =
           unknownError instanceof Error
             ? unknownError
-            : new Error("Logout failed"),
-        );
-      });
+            : new Error("Logout failed");
+        setError(err);
+        return Promise.reject(err);
+      },
+    );
   }, [authClient, setErrorMessage]);
 
   useEffect(() => {

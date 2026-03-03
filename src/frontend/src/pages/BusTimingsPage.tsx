@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { motion } from "motion/react";
 import type { BusTiming, Route } from "../backend.d";
-import { useGetAllRoutes, useGetTimingsByRoute } from "../hooks/useQueries";
+import { useGetAllRoutes, useGetTimingsByRoute, useGetBusDetails } from "../hooks/useQueries";
 import {
   DEMO_BUSES,
   DEMO_ROUTES,
@@ -150,6 +150,13 @@ function TimingCard({
 }) {
   const navigate = useNavigate();
   const bus = getBusById(timing.busId, DEMO_BUSES);
+  const { data: backendBus } = useGetBusDetails(timing.busId);
+  const fullBus = backendBus ?? bus;
+  const currentStopIndex = Number(fullBus?.currentStopIndex ?? 0);
+  const currentStopName =
+    route && route.stops[currentStopIndex]
+      ? route.stops[currentStopIndex]
+      : "";
 
   const statusColors: Record<string, string> = {
     OnTime:
@@ -178,11 +185,16 @@ function TimingCard({
               </div>
               <div>
                 <p className="font-display font-bold text-foreground text-base">
-                  {bus?.busNumber ?? timing.busId}
+                  {fullBus?.busNumber ?? timing.busId}
                 </p>
                 <p className="text-xs text-muted-foreground font-body">
-                  {bus?.busType ?? "Standard Bus"}
+                  {fullBus?.busType ?? "Standard Bus"}
                 </p>
+                {currentStopName && (
+                  <p className="text-xs text-[oklch(0.65_0.04_250)] font-body">
+                    Current stop: {currentStopName}
+                  </p>
+                )}
               </div>
             </div>
 
