@@ -5,17 +5,23 @@ import { useNavigate } from "@tanstack/react-router";
 import { ArrowRight, Info, Loader2, Navigation } from "lucide-react";
 import { StopPicker } from "@/components/StopPicker";
 import { motion } from "motion/react";
-import { useState } from "react";
+import { useState, useEffect} from "react";
 import { toast } from "sonner";
 import type { Route } from "../backend.d";
 import { useGetAllRoutes } from "../hooks/useQueries";
 import { DEMO_ROUTES, findRouteForStops, getAllStops } from "../utils/demoData";
+import { doc, onSnapshot } from "firebase/firestore";
+import { db } from "../lib/firebase"; 
+import { useSearch } from "@tanstack/react-router";
 
 
 
 export function FindBusPage() {
   const [fromStop, setFromStop] = useState("");
   const [toStop, setToStop] = useState("");
+
+  const [currentStopIndex, setCurrentStopIndex] = useState<number | null>(null);
+
   // search terms used to filter options in the dropdowns
   const [fromSearch, setFromSearch] = useState("");
   const [toSearch, setToSearch] = useState("");
@@ -25,6 +31,67 @@ export function FindBusPage() {
   const { data: backendRoutes, isLoading } = useGetAllRoutes();
   const routes: Route[] = backendRoutes?.length ? backendRoutes : DEMO_ROUTES;
   const allStops = getAllStops(routes);
+
+  const search = useSearch({ strict: false }) as { busId?: string };
+const busId = search?.busId;
+
+function findNearestStopIndex(lat: number, lng: number): number {
+  let nearestIndex = 0;
+  let minDistance = Infinity;
+
+  routes.forEach((route) => {
+    route.stops.forEach((stop, index) => {
+      // Simplified distance calculation (you may want to use actual coordinates)
+      const distance = Math.abs(index);
+      if (distance < minDistance) {
+        minDistance = distance;
+        nearestIndex = index;
+      }
+    });
+  });
+
+  return nearestIndex;
+}
+
+useEffect(() => {
+  if (!busId) return;
+
+  const unsubscribe = onSnapshot(
+    doc(db, "routes", busId),
+    (docSnap) => {
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        const location = data.driverLocation;
+
+      if (location) {
+      const nearestIndex = findNearestStopIndex(location.lat, location.lng);
+      setCurrentStopIndex(nearestIndex);
+     }
+
+      }
+    }
+  );
+
+  return () => unsubscribe();
+}, [busId]);
+
+  useEffect(() => {
+  const routeId = "route1"; // same routeId
+
+  const unsubscribe = onSnapshot(doc(db, "routes", routeId), (docSnap) => {
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      const location = data.driverLocation;
+
+      if (location) {
+        // yaha tumhara map marker update logic lagega
+        console.log("Driver location:", location.lat, location.lng);
+      }
+    }
+  });
+
+  return () => unsubscribe();
+}, []);
 
   const toStops = fromStop
     ? routes

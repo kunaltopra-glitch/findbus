@@ -6,6 +6,8 @@ import { useUpdateBusPosition } from "../hooks/useQueries";
 import { DEMO_BUSES, getBusById } from "../utils/demoData";
 import { auth } from "@/lib/firebase";
 import { signOut } from "firebase/auth";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 export default function TripStartedPage() {
   const navigate = useNavigate();
@@ -15,6 +17,28 @@ export default function TripStartedPage() {
 
   const busId = search?.busId;
   const demoBus = busId ? getBusById(busId, DEMO_BUSES) : undefined;
+
+useEffect(() => {
+  if (!busId) return;
+
+  const watchId = navigator.geolocation.watchPosition(
+    async (position) => {
+      const { latitude, longitude } = position.coords;
+
+      await setDoc(doc(db, "routes", busId), {
+        driverLocation: {
+          lat: latitude,
+          lng: longitude,
+          updatedAt: serverTimestamp(),
+        },
+      });
+    },
+    (error) => console.log(error),
+    { enableHighAccuracy: true }
+  );
+
+  return () => navigator.geolocation.clearWatch(watchId);
+}, [busId]);
 
   // periodically ping backend so passengers see location updates
   useEffect(() => {
