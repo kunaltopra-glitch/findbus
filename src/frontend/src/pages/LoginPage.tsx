@@ -35,6 +35,8 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [staffType, setStaffType] = useState<"Driver" | "Conductor">("Driver");
+  const [staffId, setStaffId] = useState("");
+  const [etimId, setEtimId] = useState("");
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -84,8 +86,11 @@ export default function LoginPage() {
       if (!snap.empty) return snap.docs[0].data().email as string;
     }
     if (r === "ETIM") {
+      q = query(usersRef, where("etimId", "==", id));
+      let snap = await getDocs(q);
+      if (!snap.empty) return snap.docs[0].data().email as string;
       q = query(usersRef, where("machineId", "==", id));
-      const snap = await getDocs(q);
+      snap = await getDocs(q);
       if (!snap.empty) return snap.docs[0].data().email as string;
     }
     return null;
@@ -129,10 +134,11 @@ export default function LoginPage() {
       }
       if (role === "Staff") {
         payload.staffType = staffType;
-        payload.staffId = identifier || null;
+        payload.staffId = staffId || null;
       }
       if (role === "ETIM") {
-        payload.machineId = identifier || null;
+        payload.etimId = etimId || null;
+        payload.machineId = etimId || null; // Keep machineId for backward compatibility
       }
       await setDoc(uref, payload);
       // auto-login on signup
@@ -175,10 +181,33 @@ export default function LoginPage() {
             </div>
           )}
 
-          <div>
-            <label className="text-xs text-muted-foreground">{role === "ETIM" ? "Machine ID" : "Username / Phone / Email"}</label>
-            <Input value={identifier} onChange={(e) => setIdentifier((e.target as HTMLInputElement).value)} />
-          </div>
+          {mode === "login" ? (
+            <div>
+              <label className="text-xs text-muted-foreground">{role === "ETIM" ? "Machine ID" : role === "Staff" ? "Staff ID / Email" : "Username / Phone / Email"}</label>
+              <Input value={identifier} onChange={(e) => setIdentifier((e.target as HTMLInputElement).value)} />
+            </div>
+          ) : (
+            <>
+              {role === "Passenger" && (
+                <div>
+                  <label className="text-xs text-muted-foreground">Username / Phone / Email</label>
+                  <Input value={identifier} onChange={(e) => setIdentifier((e.target as HTMLInputElement).value)} />
+                </div>
+              )}
+              {role === "Staff" && (
+                <div>
+                  <label className="text-xs text-muted-foreground">Staff ID</label>
+                  <Input value={staffId} onChange={(e) => setStaffId((e.target as HTMLInputElement).value)} placeholder="Enter your staff ID" />
+                </div>
+              )}
+              {role === "ETIM" && (
+                <div>
+                  <label className="text-xs text-muted-foreground">ETIM ID</label>
+                  <Input value={etimId} onChange={(e) => setEtimId((e.target as HTMLInputElement).value)} placeholder="Enter your ETIM ID" />
+                </div>
+              )}
+            </>
+          )}
 
           {mode === "signup" && (
             <div>

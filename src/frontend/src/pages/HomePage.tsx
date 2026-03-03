@@ -203,7 +203,7 @@ export function HomePage() {
                 className="bg-white/8 border border-white/12 rounded-xl p-4 text-center"
               >
                 <Icon className="w-5 h-5 text-[oklch(0.82_0.18_55)] mx-auto mb-2" />
-                <p className="font-display font-bold text-2xl text-white">
+                <p className="font-display font-bold text-2xl text-blue-400">
                   {value}
                 </p>
                 <p className="text-xs text-[oklch(0.7_0.04_250)] font-body mt-0.5">

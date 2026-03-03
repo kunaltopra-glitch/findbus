@@ -1,7 +1,10 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { Bus, Menu, X } from "lucide-react";
+import { Bus, Menu, X, LogOut, User } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
+import { auth } from "@/lib/firebase";
+import { signOut, onAuthStateChanged } from "firebase/auth";
+import { Button } from "@/components/ui/button";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
@@ -14,7 +17,16 @@ const NAV_LINKS = [
 export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [user, setUser] = useState<any>(null);
+  const [profileOpen, setProfileOpen] = useState(false);
   const location = useLocation();
+
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+    return () => unsub();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -26,6 +38,15 @@ export function Navbar() {
   useEffect(() => {
     setMenuOpen(false);
   }, [location.pathname]);
+
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+      setProfileOpen(false);
+    } catch (error) {
+      console.error("Sign out error:", error);
+    }
+  };
 
   return (
     <header
@@ -78,6 +99,50 @@ export function Navbar() {
             })}
           </div>
 
+          {/* Profile Button */}
+          <div className="hidden md:flex items-center gap-3">
+            {user ? (
+              <div className="relative">
+                <button
+                  onClick={() => setProfileOpen(!profileOpen)}
+                  className="p-2 rounded-full hover:bg-white/10 transition-colors text-white"
+                  aria-label="User profile"
+                >
+                  <User className="w-5 h-5" />
+                </button>
+                <AnimatePresence>
+                  {profileOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      transition={{ duration: 0.2 }}
+                      className="absolute right-0 mt-2 w-48 bg-[oklch(0.24_0.14_264/0.97)] border border-white/20 rounded-lg shadow-lg p-2 z-50"
+                    >
+                      <div className="px-3 py-2 text-xs text-[oklch(0.85_0.02_250)] border-b border-white/10">
+                        {user.email}
+                      </div>
+                      <button
+                        onClick={handleSignOut}
+                        className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-400 hover:bg-red-400/10 rounded transition-colors mt-1"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        Sign Out
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            ) : (
+              <Link
+                to="/login"
+                className="px-4 py-2 text-sm font-body font-medium rounded-md bg-[oklch(0.72_0.21_50)] text-white hover:bg-[oklch(0.78_0.21_52)] transition-colors"
+              >
+                Login
+              </Link>
+            )}
+          </div>
+
           {/* Mobile Menu Button */}
           <button
             type="button"
@@ -122,6 +187,27 @@ export function Navbar() {
                   </Link>
                 );
               })}
+              {user ? (
+                <div className="pt-3 border-t border-white/10">
+                  <div className="px-4 py-2 text-xs text-[oklch(0.85_0.02_250)]">
+                    {user.email}
+                  </div>
+                  <button
+                    onClick={handleSignOut}
+                    className="w-full flex items-center gap-2 px-4 py-3 text-sm text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    Sign Out
+                  </button>
+                </div>
+              ) : (
+                <Link
+                  to="/login"
+                  className="block px-4 py-3 rounded-lg text-sm font-body font-medium bg-[oklch(0.72_0.21_50)] text-white hover:bg-[oklch(0.78_0.21_52)] transition-colors mt-2"
+                >
+                  Login
+                </Link>
+              )}
             </div>
           </motion.div>
         )}
