@@ -39,6 +39,7 @@ export function BusTimingsPage() {
     ? backendTimings
     : DEMO_TIMINGS.filter((t) => t.routeId === routeId);
 
+<<<<<<< HEAD
   // Sort timings so the next upcoming departures (relative to now) appear first.
   // If a departure time has already passed today, treat it as the next-day occurrence
   // so it appears after today's upcoming departures.
@@ -52,6 +53,8 @@ export function BusTimingsPage() {
     return aDelta - bDelta;
   });
 
+=======
+>>>>>>> 4aacf40c7b67875eba6f1810d36f2cf96fc0f7f6
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -87,10 +90,17 @@ export function BusTimingsPage() {
               <div className="flex items-center gap-2 flex-wrap">
                 {route.stops.map((stop, idx) => (
                   <span key={stop} className="flex items-center gap-2">
+<<<<<<< HEAD
                     <span className="flex items-center gap-1 font-body text-sm text-[oklch(0.72_0.21_50)]">
                           <MapPin className="w-3 h-3 text-[oklch(0.72_0.21_50)]" />
                           {stop}
                         </span>
+=======
+                    <span className="flex items-center gap-1 text-blue-100 font-body text-sm">
+                      <MapPin className="w-3 h-3 text-[oklch(0.72_0.21_50)]" />
+                      {stop}
+                    </span>
+>>>>>>> 4aacf40c7b67875eba6f1810d36f2cf96fc0f7f6
                     {idx < route.stops.length - 1 && (
                       <span className="text-[oklch(0.5_0.04_250)]">→</span>
                     )}
@@ -122,7 +132,11 @@ export function BusTimingsPage() {
           </div>
         ) : (
           <div className="space-y-4">
+<<<<<<< HEAD
             {sortedTimings.map((timing, idx) => (
+=======
+            {timings.map((timing, idx) => (
+>>>>>>> 4aacf40c7b67875eba6f1810d36f2cf96fc0f7f6
               <TimingCard
                 key={timing.id}
                 timing={timing}

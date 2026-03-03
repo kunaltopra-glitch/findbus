@@ -271,6 +271,7 @@ export function FindBusPage() {
                     <p className="font-display font-semibold text-foreground group-hover:text-[oklch(0.65_0.18_50)]">
                       {route.name}
                     </p>
+<<<<<<< HEAD
                     <div className="flex items-center gap-2 mt-1">
                       <Button variant="ghost" size="sm" className="px-2 py-1">
                         <span className="text-xs text-muted-foreground font-body">{route.stops[0]}</span>
@@ -279,6 +280,19 @@ export function FindBusPage() {
                       <Button variant="ghost" size="sm" className="px-2 py-1">
                         <span className="text-xs text-muted-foreground font-body">{route.stops[route.stops.length - 1]}</span>
                       </Button>
+=======
+                    <div className="flex items-center gap-1.5 mt-1">
+                      {route.stops.map((stop, sIdx) => (
+                        <span key={stop} className="flex items-center gap-1.5">
+                          <span className="text-xs text-muted-foreground font-body">
+                            {stop}
+                          </span>
+                          {sIdx < route.stops.length - 1 && (
+                            <ArrowRight className="w-3 h-3 text-muted-foreground/50" />
+                          )}
+                        </span>
+                      ))}
+>>>>>>> 4aacf40c7b67875eba6f1810d36f2cf96fc0f7f6
                     </div>
                   </div>
                   <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-[oklch(0.72_0.21_50)] transition-colors" />

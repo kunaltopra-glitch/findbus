@@ -6,10 +6,13 @@ import {
   createRouter,
 } from "@tanstack/react-router";
 import { Layout } from "./components/Layout";
+<<<<<<< HEAD
 import LoginPage from "./pages/LoginPage";
 import StaffPage from "./pages/StaffPage";
 import ETIMPage from "./pages/ETIMPage";
 import TripStartedPage from "./pages/TripStartedPage";
+=======
+>>>>>>> 4aacf40c7b67875eba6f1810d36f2cf96fc0f7f6
 import { AIBotPage } from "./pages/AIBotPage";
 import { AdminPage } from "./pages/AdminPage";
 import { BookTicketPage } from "./pages/BookTicketPage";
@@ -35,7 +38,11 @@ const layoutRoute = createRoute({
 // ── Page routes ────────────────────────────────────────
 const homeRoute = createRoute({
   getParentRoute: () => layoutRoute,
+<<<<<<< HEAD
   path: "/home",
+=======
+  path: "/",
+>>>>>>> 4aacf40c7b67875eba6f1810d36f2cf96fc0f7f6
   component: HomePage,
 });
 
@@ -89,6 +96,7 @@ const adminRoute = createRoute({
 
 // ── Router ─────────────────────────────────────────────
 const routeTree = rootRoute.addChildren([
+<<<<<<< HEAD
   // Public routes: landing/login and special staff/etim flows
   createRoute({
     getParentRoute: () => rootRoute,
@@ -115,6 +123,8 @@ const routeTree = rootRoute.addChildren([
     path: "/trip-started",
     component: TripStartedPage,
   }),
+=======
+>>>>>>> 4aacf40c7b67875eba6f1810d36f2cf96fc0f7f6
   layoutRoute.addChildren([
     homeRoute,
     findBusRoute,
