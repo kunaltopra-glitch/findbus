@@ -64,8 +64,11 @@ export default function StaffPage() {
 
   const { data: backendBuses } = useGetBusesByRoute(routeId || "");
   const availableBuses: Bus[] =
-    (backendBuses && backendBuses.length ? backendBuses : []) ||
-    (routeId ? DEMO_BUSES.filter((b) => b.routeId === routeId) : []);
+    backendBuses && backendBuses.length > 0
+      ? backendBuses
+      : routeId
+      ? DEMO_BUSES.filter((b) => b.routeId === routeId)
+      : [];
 
   const { mutate: updatePosition } = useUpdateBusPosition();
 

@@ -1,4 +1,4 @@
-import { Link, useLocation } from "@tanstack/react-router";
+import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 import { Bus, Menu, X, LogOut, User } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
@@ -20,6 +20,7 @@ export function Navbar() {
   const [user, setUser] = useState<any>(null);
   const [profileOpen, setProfileOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (currentUser) => {
@@ -43,6 +44,8 @@ export function Navbar() {
     try {
       await signOut(auth);
       setProfileOpen(false);
+      // redirect user back to login page after signing out
+      navigate({ to: "/login" });
     } catch (error) {
       console.error("Sign out error:", error);
     }
