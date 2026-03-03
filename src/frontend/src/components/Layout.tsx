@@ -1,5 +1,4 @@
 import { Toaster } from "@/components/ui/sonner";
-<<<<<<< HEAD
 import { Outlet, useNavigate, useLocation } from "@tanstack/react-router";
 import { Footer } from "./Footer";
 import { Navbar } from "./Navbar";
@@ -42,13 +41,6 @@ export function Layout() {
     return () => unsub();
   }, [navigate, loc]);
 
-=======
-import { Outlet } from "@tanstack/react-router";
-import { Footer } from "./Footer";
-import { Navbar } from "./Navbar";
-
-export function Layout() {
->>>>>>> 4aacf40c7b67875eba6f1810d36f2cf96fc0f7f6
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Navbar />

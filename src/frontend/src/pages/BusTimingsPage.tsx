@@ -39,22 +39,18 @@ export function BusTimingsPage() {
     ? backendTimings
     : DEMO_TIMINGS.filter((t) => t.routeId === routeId);
 
-<<<<<<< HEAD
-  // Sort timings so the next upcoming departures (relative to now) appear first.
-  // If a departure time has already passed today, treat it as the next-day occurrence
-  // so it appears after today's upcoming departures.
-  const sortedTimings = timings.slice().sort((a, b) => {
-    const now = Date.now();
-    const day = 24 * 60 * 60 * 1000;
-    const aMs = Number(a.departureTime) / 1_000_000;
-    const bMs = Number(b.departureTime) / 1_000_000;
-    const aDelta = aMs >= now ? aMs - now : aMs - now + day;
-    const bDelta = bMs >= now ? bMs - now : bMs - now + day;
-    return aDelta - bDelta;
-  });
-
-=======
->>>>>>> 4aacf40c7b67875eba6f1810d36f2cf96fc0f7f6
+// Sort timings so the next upcoming departures (relative to now) appear first.
+// If a departure time has already passed today, treat it as the next-day occurrence
+// so it appears after today's upcoming departures.
+const sortedTimings = timings.slice().sort((a, b) => {
+  const now = Date.now();
+  const day = 24 * 60 * 60 * 1000;
+  const aMs = Number(a.departureTime) / 1_000_000;
+  const bMs = Number(b.departureTime) / 1_000_000;
+  const aDelta = aMs >= now ? aMs - now : aMs - now + day;
+  const bDelta = bMs >= now ? bMs - now : bMs - now + day;
+  return aDelta - bDelta;
+});
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -90,17 +86,10 @@ export function BusTimingsPage() {
               <div className="flex items-center gap-2 flex-wrap">
                 {route.stops.map((stop, idx) => (
                   <span key={stop} className="flex items-center gap-2">
-<<<<<<< HEAD
                     <span className="flex items-center gap-1 font-body text-sm text-[oklch(0.72_0.21_50)]">
                           <MapPin className="w-3 h-3 text-[oklch(0.72_0.21_50)]" />
                           {stop}
                         </span>
-=======
-                    <span className="flex items-center gap-1 text-blue-100 font-body text-sm">
-                      <MapPin className="w-3 h-3 text-[oklch(0.72_0.21_50)]" />
-                      {stop}
-                    </span>
->>>>>>> 4aacf40c7b67875eba6f1810d36f2cf96fc0f7f6
                     {idx < route.stops.length - 1 && (
                       <span className="text-[oklch(0.5_0.04_250)]">→</span>
                     )}
