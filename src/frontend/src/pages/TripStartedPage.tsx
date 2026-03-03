@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { useInternetIdentity } from "@/hooks/useInternetIdentity";
 import { useUpdateBusPosition } from "../hooks/useQueries";
 import { DEMO_BUSES, getBusById } from "../utils/demoData";
+import { auth } from "@/lib/firebase";
+import { signOut } from "firebase/auth";
 
 export default function TripStartedPage() {
   const navigate = useNavigate();
@@ -30,6 +32,13 @@ export default function TripStartedPage() {
     } catch (e) {
       console.error("Logout failed", e);
     }
+
+    try {
+      await signOut(auth);
+    } catch (e) {
+      console.error("Firebase sign out failed", e);
+    }
+
     navigate({ to: "/login" });
   };
 

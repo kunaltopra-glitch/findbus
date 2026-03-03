@@ -5,6 +5,8 @@ import { useInternetIdentity } from "@/hooks/useInternetIdentity";
 import { StopPicker } from "@/components/StopPicker";
 import { ArrowRight } from "lucide-react";
 import type { Route, Bus } from "../backend.d";
+import { auth } from "@/lib/firebase";
+import { signOut } from "firebase/auth";
 import {
   DEMO_ROUTES,
   DEMO_BUSES,
@@ -102,6 +104,13 @@ export default function ETIMPage() {
     } catch (e) {
       console.error("Logout failed", e);
     }
+
+    try {
+      await signOut(auth);
+    } catch (e) {
+      console.error("Firebase sign out failed", e);
+    }
+
     navigate({ to: "/login" });
   };
 

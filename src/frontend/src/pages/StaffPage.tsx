@@ -5,6 +5,8 @@ import { useInternetIdentity } from "@/hooks/useInternetIdentity";
 import { StopPicker } from "@/components/StopPicker";
 import { ArrowRight } from "lucide-react";
 import type { Route, Bus } from "../backend.d";
+import { auth } from "@/lib/firebase";
+import { signOut } from "firebase/auth";
 import {
   DEMO_ROUTES,
   DEMO_BUSES,
@@ -100,12 +102,21 @@ export default function StaffPage() {
   };
 
   const handleSignout = async () => {
+    // clear the internet identity first (IC login)
     try {
       await logout();
     } catch (e) {
       // ignore, we still want to redirect
       console.error("Logout failed", e);
     }
+
+    // also sign out from Firebase so layout redirect logic notices
+    try {
+      await signOut(auth);
+    } catch (e) {
+      console.error("Firebase sign out failed", e);
+    }
+
     navigate({ to: "/login" });
   };
 
