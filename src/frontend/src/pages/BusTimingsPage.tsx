@@ -121,11 +121,7 @@ const sortedTimings = timings.slice().sort((a, b) => {
           </div>
         ) : (
           <div className="space-y-4">
-<<<<<<< HEAD
             {sortedTimings.map((timing, idx) => (
-=======
-            {timings.map((timing, idx) => (
->>>>>>> 4aacf40c7b67875eba6f1810d36f2cf96fc0f7f6
               <TimingCard
                 key={timing.id}
                 timing={timing}
