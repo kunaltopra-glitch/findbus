@@ -25,14 +25,14 @@ export const DEMO_ROUTES: Route[] = [
   },
   {
     id: "route-4",
-    name: "Yamunanagar → Saraswati Nagar",
+    name: "Yamunanagar → Saraswati Nagar (via Rapoli)",
     fromStop: "Yamunanagar",
     toStop: "Saraswati Nagar",
     stops: ["Yamunanagar", "Vishwakarma Chowk", "Jorion", "Mandebar", "Gohlanpur", "Harnaul", "Chhota Topra", "Badanpuri", "Ismailpur", "Topra Kalan", "Sagri", "Kheri Lakha Singh", "Masana", "Satgoli", "Rapoli", "Kajibans", "Saraswati Nagar"],
   },
   {
     id: "route-5",
-    name: "Yamunanagar → Saraswati Nagar",
+    name: "Yamunanagar → Saraswati Nagar (via Antawa/Bhogpur)",
     fromStop: "Yamunanagar",
     toStop: "Saraswati Nagar",
     stops: ["Yamunanagar", "Vishwakarma Chowk", "Jorion", "Mandebar", "Gohlanpur", "Harnaul", "Chhota Topra", "Badanpuri", "Ismailpur", "Topra Kalan", "Sagri", "Kheri Lakha Singh", "Antawa", "Hartan", "Bhogpur", "Ghari", "Saraswati Nagar"],
@@ -46,21 +46,21 @@ export const DEMO_ROUTES: Route[] = [
   },
   {
     id: "route-7",
-    name: "Yamunanagar → Saraswati Nagar",
+    name: "Yamunanagar → Saraswati Nagar (via Hafizpur)",
     fromStop: "Yamunanagar",
     toStop: "Saraswati Nagar",
     stops: ["Yamunanagar", "Vishwakarma Chowk", "Jorion", "Mandebar", "Gohlanpur", "Harnaul", "Retgarh", "Hafizpur", "Ismailpur", "Jhaguri","Nagla", "Sagri", "Kheri Lakha Singh", "Masana", "Satgoli", "Rapoli", "Kajibans", "Saraswati Nagar"],
   }, 
   {
     id: "route-8",
-    name: "Saraswati Nagar → Yamunanagar Via Harnaul",
+    name: "Saraswati Nagar → Yamunanagar (via Harnaul)",
     fromStop: "Saraswati Nagar",
     toStop: "Yamunanagar",
     stops: ["Saraswati Nagar", "Kajibans", "Rapoli", "Satgoli", "Masana", "Kheri Lakha Singh", "Sagri", "Topra Kalan", "Ismailpur", "Badanpuri", "Chhota Topra", "Harnaul", "Gohlanpur", "Mandebar", "Jorion", "Vishwakarma Chowk", "Yamunanagar"],
   }, 
 {
     id: "route-9",
-    name: "Saraswati Nagar → Yamunanagar Via Harnaul",
+    name: "Saraswati Nagar → Yamunanagar (via Bhogpur)",
     fromStop: "Saraswati Nagar",
     toStop: "Yamunanagar",
     stops: ["Saraswati Nagar", "Ghari", "Bhogpur", "Hartan", "Antawa", "Kheri Lakha Singh", "Sagri", "Topra Kalan", "Ismailpur", "Badanpuri", "Chhota Topra", "Harnaul", "Gohlanpur", "Mandebar", "Jorion", "Vishwakarma Chowk", "Yamunanagar"],
@@ -74,7 +74,7 @@ export const DEMO_ROUTES: Route[] = [
   },
   {
     id: "route-11",
-    name: "Saraswati Nagar → Yamunanagar Via Hafizpur",
+    name: "Saraswati Nagar → Yamunanagar (via Hafizpur)",
     fromStop: "Saraswati Nagar",
     toStop: "Yamunanagar",
     stops: ["Saraswati Nagar", "Kajibans", "Rapoli", "Satgoli", "Masana", "Kheri Lakha Singh", "Sagri", "Nagla", "Jhaguri", "Ismailpur", "Hafizpur", "Retgarh", "Harnaul", "Gohlanpur", "Mandebar", "Jorion", "Vishwakarma Chowk", "Yamunanagar"],
@@ -391,17 +391,9 @@ export const DEMO_BUSES: Bus[] = [
     speed: 62,
     currentStopIndex: BigInt(1),
   },
-  {
-    id: "bus-14",
-    busNumber: "HR-10-PA-0235",
-    driverID: "DRV-2045",
-    conductorID: "CND-3086",
-    busType: "Non-AC Volvo",
-    routeId: "route-8",
-    status: "Delayed" as BusStatus,
-    speed: 62,
-    currentStopIndex: BigInt(0),
-  },
+  // duplicate entry above removed; if another vehicle is desired for the same route,
+  // give it a new id and number.
+
   {
     id: "bus-20",
     busNumber: "HR-99-YY-0001",
@@ -419,7 +411,7 @@ export const DEMO_BUSES: Bus[] = [
     driverID: "DRV-2046",
     conductorID: "CND-3087",
     busType: "Non-AC Volvo",
-    routeId: "route-9",
+    routeId: "route-8", // corrected to match timing-8b
     status: "OnTime" as BusStatus,
     speed: 62,
     currentStopIndex: BigInt(1),
@@ -430,7 +422,7 @@ export const DEMO_BUSES: Bus[] = [
     driverID: "DRV-2047",
     conductorID: "CND-3088",
     busType: "Non-AC Volvo",
-    routeId: "route-10",
+    routeId: "route-9", // corrected to match timing-9a
     status: "OnTime" as BusStatus,
     speed: 62,
     currentStopIndex: BigInt(1),
@@ -441,7 +433,7 @@ export const DEMO_BUSES: Bus[] = [
     driverID: "DRV-2048",
     conductorID: "CND-3089",
     busType: "Non-AC Volvo",
-    routeId: "route-11",
+    routeId: "route-10", // corrected to match timing-10a
     status: "OnTime" as BusStatus,
     speed: 62,
     currentStopIndex: BigInt(1),
@@ -478,16 +470,31 @@ export function getBusById(id: string, buses: Bus[]): Bus | undefined {
   return buses.find((b) => b.id === id);
 }
 
+// ── Route search helpers ─────────────────────────────────
+// return **all** routes that travel from one stop to another in the
+// correct direction. the demo data contains multiple variants of the
+// same origin/destination pair, so callers will usually want to show
+// every possibility rather than just one.
+export function findRoutesForStops(
+  fromStop: string,
+  toStop: string,
+  routes: Route[],
+): Route[] {
+  return routes.filter((r) => {
+    const fromIdx = r.stops.indexOf(fromStop);
+    const toIdx = r.stops.indexOf(toStop);
+    return fromIdx !== -1 && toIdx !== -1 && fromIdx < toIdx;
+  });
+}
+
+// convenience wrapper for existing code that expects a single result;
+// it simply returns the first matching route (or undefined if none).
 export function findRouteForStops(
   fromStop: string,
   toStop: string,
   routes: Route[],
 ): Route | undefined {
-  return routes.find((r) => {
-    const fromIdx = r.stops.indexOf(fromStop);
-    const toIdx = r.stops.indexOf(toStop);
-    return fromIdx !== -1 && toIdx !== -1 && fromIdx < toIdx;
-  });
+  return findRoutesForStops(fromStop, toStop, routes)[0];
 }
 
 export function getAllStops(routes: Route[]): string[] {

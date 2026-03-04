@@ -5,6 +5,8 @@ import {
   createRoute,
   createRouter,
 } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { Splash } from "./components/Splash";
 import { Layout } from "./components/Layout";
 import LoginPage from "./pages/LoginPage";
 import StaffPage from "./pages/StaffPage";
@@ -137,5 +139,14 @@ declare module "@tanstack/react-router" {
 }
 
 export default function App() {
+  const [showSplash, setShowSplash] = useState(true);
+
+  useEffect(() => {
+    const t = setTimeout(() => setShowSplash(false), 1100);
+    return () => clearTimeout(t);
+  }, []);
+
+  if (showSplash) return <Splash />;
+
   return <RouterProvider router={router} />;
 }

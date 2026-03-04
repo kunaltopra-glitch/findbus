@@ -1,4 +1,5 @@
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
+import logo from "../pages/icom.jpg";
 import { Bus, Menu, X, LogOut, User } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
@@ -63,8 +64,8 @@ export function Navbar() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2.5 group">
-            <div className="w-9 h-9 rounded-lg bg-[oklch(0.72_0.21_50)] flex items-center justify-center shadow-md group-hover:bg-[oklch(0.78_0.21_52)] transition-colors">
-              <Bus className="w-5 h-5 text-white" />
+            <div className="w-9 h-9 rounded-lg overflow-hidden flex items-center justify-center shadow-md group-hover:opacity-90 transition-opacity">
+              <img src={logo} alt="FindBus logo" className="w-full h-full object-cover" />
             </div>
             <div>
               <span className="text-white font-display font-bold text-xl tracking-tight">
