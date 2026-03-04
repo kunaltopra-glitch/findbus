@@ -9,7 +9,7 @@ import { useState, useEffect} from "react";
 import { toast } from "sonner";
 import type { Route } from "../backend.d";
 import { useGetAllRoutes } from "../hooks/useQueries";
-import { DEMO_ROUTES, findRouteForStops, getAllStops, DEMO_BUSES, getBusById, getRouteById } from "../utils/demoData";
+import { DEMO_ROUTES, findRouteForStops, getAllStops, DEMO_BUSES, getBusById, getRouteById, getDestinationsFromStop } from "../utils/demoData";
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../lib/firebase"; 
 import { useSearch } from "@tanstack/react-router";
@@ -234,12 +234,7 @@ export function FindBusPage() {
     return () => unsubscribe();
   }, [busId]);
 
-  const toStops = fromStop
-    ? routes
-        .filter((r) => r.stops.includes(fromStop))
-        .flatMap((r) => r.stops.slice(r.stops.indexOf(fromStop) + 1))
-        .filter((v, i, a) => a.indexOf(v) === i)
-    : allStops;
+  const toStops = fromStop ? getDestinationsFromStop(fromStop, routes) : allStops;
 
   // apply search filters to the available stop lists
   const filteredFromStops = allStops.filter((stop) =>

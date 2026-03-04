@@ -14,7 +14,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import type { Route } from "../backend.d";
 import { useGetAllRoutes } from "../hooks/useQueries";
-import { DEMO_ROUTES, findRouteForStops, getAllStops } from "../utils/demoData";
+import { DEMO_ROUTES, findRouteForStops, getAllStops, getDestinationsFromStop } from "../utils/demoData";
 
 const TICKET_BENEFITS = [
   "Instant digital ticket on payment",
@@ -34,12 +34,7 @@ export function BookTicketPage() {
   const routes: Route[] = backendRoutes?.length ? backendRoutes : DEMO_ROUTES;
   const allStops = getAllStops(routes);
 
-  const toStops = fromStop
-    ? routes
-        .filter((r) => r.stops.includes(fromStop))
-        .flatMap((r) => r.stops.slice(r.stops.indexOf(fromStop) + 1))
-        .filter((v, i, a) => a.indexOf(v) === i)
-    : allStops;
+  const toStops = fromStop ? getDestinationsFromStop(fromStop, routes) : allStops;
 
   const filteredFromStops = allStops.filter((stop) =>
     stop.toLowerCase().includes(fromSearch.toLowerCase()),

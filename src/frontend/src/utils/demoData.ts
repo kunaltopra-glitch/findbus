@@ -507,6 +507,33 @@ export function getAllStops(routes: Route[]): string[] {
   return Array.from(stops).sort();
 }
 
+// ── Helper to get available destinations from a stop ────
+// Returns destinations in logical order (as they appear in the route traversal)
+export function getDestinationsFromStop(
+  fromStop: string,
+  routes: Route[]
+): string[] {
+  const destinationMap = new Map<string, number>(); // stop -> earliest position
+  
+  for (const route of routes) {
+    const stopIndex = route.stops.indexOf(fromStop);
+    if (stopIndex === -1 || stopIndex === route.stops.length - 1) continue;
+    
+    // Get stops after fromStop in this route
+    const stopsAfter = route.stops.slice(stopIndex + 1);
+    for (const stop of stopsAfter) {
+      const currentPos = destinationMap.get(stop) ?? Infinity;
+      // Store the minimum position this stop appears after fromStop across all routes
+      destinationMap.set(stop, Math.min(currentPos, stopsAfter.indexOf(stop)));
+    }
+  }
+  
+  // Sort by position and return
+  return Array.from(destinationMap.entries())
+    .sort((a, b) => a[1] - b[1])
+    .map(([stop]) => stop);
+}
+
 export function getStatusColor(status: string): string {
   switch (status) {
     case "OnTime":

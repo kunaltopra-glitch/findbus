@@ -409,11 +409,12 @@ function InfoItem({
 }
 
 function getETA(currentIdx: number, stops: string[]): string {
+  // Ensure stops are in correct order (ascending indices)
   const remaining = stops.length - 1 - currentIdx;
   if (remaining <= 0) return "Arrived";
+  
+  // Calculate approximate time: 35 minutes per remaining stop
   const minutes = remaining * 35;
-  const _hrs = Math.floor(minutes / 60);
-  const _mins = minutes % 60;
   const now = new Date();
   now.setMinutes(now.getMinutes() + minutes);
   return now.toLocaleTimeString("en-IN", {
