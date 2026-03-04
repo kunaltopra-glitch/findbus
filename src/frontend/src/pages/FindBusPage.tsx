@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useNavigate } from "@tanstack/react-router";
-import { ArrowRight, Info, Loader2, Navigation } from "lucide-react";
+import { ArrowRight, CheckCircle2, Info, Loader2, Navigation, MapPin } from "lucide-react";
 import { StopPicker } from "@/components/StopPicker";
 import { motion } from "motion/react";
 import { useState, useEffect} from "react";
@@ -14,111 +14,225 @@ import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../lib/firebase"; 
 import { useSearch } from "@tanstack/react-router";
 
+// Route stops with coordinates (latitude, longitude)
+const ROUTE_STOPS = [
+  { name: "Rajpuri", lat: 29.0596, lng: 75.8770 },
+  { name: "Satgoli", lat: 29.0650, lng: 75.8820 },
+  { name: "Masana", lat: 29.0720, lng: 75.8900 },
+  { name: "Kheri Lakha Singh", lat: 29.0800, lng: 75.8950 },
+  { name: "Sagri", lat: 29.0880, lng: 75.9020 },
+  { name: "Topra Kalan", lat: 29.0960, lng: 75.9100 },
+  { name: "Ismailpur", lat: 29.1040, lng: 75.9180 },
+  { name: "Badanpuri", lat: 29.1120, lng: 75.9260 },
+  { name: "Chhota Topra", lat: 29.1200, lng: 75.9340 },
+];
 
+
+
+/**
+ * Calculate distance between two coordinates using Haversine formula
+ * @param lat1 First latitude
+ * @param lon1 First longitude
+ * @param lat2 Second latitude
+ * @param lon2 Second longitude
+ * @returns Distance in meters
+ */
+function haversineDistance(
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number
+): number {
+  const toRad = (v: number) => (v * Math.PI) / 180;
+  const R = 6371000; // Earth radius in meters
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(toRad(lat1)) *
+      Math.cos(toRad(lat2)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
+/**
+ * Find the index of the nearest stop to the driver location
+ * @param stops Array of stops with coordinates
+ * @param lat Driver latitude
+ * @param lng Driver longitude
+ * @returns Index of the nearest stop
+ */
+function findNearestStopIndex(
+  stops: typeof ROUTE_STOPS,
+  lat: number,
+  lng: number
+): number {
+  let nearestIndex = 0;
+  let minDistance = Infinity;
+
+  stops.forEach((stop, index) => {
+    const distance = haversineDistance(lat, lng, stop.lat, stop.lng);
+    if (distance < minDistance) {
+      minDistance = distance;
+      nearestIndex = index;
+    }
+  });
+
+  return nearestIndex;
+}
+
+/**
+ * Route Timeline Component - Shows all stops with real-time bus position
+ */
+function RouteTimeline({
+  stops,
+  currentStopIndex,
+}: {
+  stops: typeof ROUTE_STOPS;
+  currentStopIndex: number | null;
+}) {
+  if (currentStopIndex === null) {
+    return (
+      <div className="text-sm text-muted-foreground text-center py-8">
+        Waiting for bus location data...
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      {stops.map((stop, index) => {
+        const isCompleted = index < currentStopIndex;
+        const isCurrent = index === currentStopIndex;
+        const isUpcoming = index > currentStopIndex;
+
+        return (
+          <motion.div
+            key={stop.name}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3, delay: index * 0.05 }}
+            className="flex items-start gap-4"
+          >
+            {/* Timeline connector */}
+            <div className="flex flex-col items-center">
+              {/* Circle */}
+              <div
+                className={`relative w-8 h-8 rounded-full flex items-center justify-center transition-all ${
+                  isCurrent
+                    ? "bg-blue-500 ring-4 ring-blue-500/30 scale-110"
+                    : isCompleted
+                      ? "bg-green-500"
+                      : "bg-gray-300"
+                }`}
+              >
+                {isCurrent ? (
+                  <span className="text-lg">🚌</span>
+                ) : isCompleted ? (
+                  <CheckCircle2 className="w-5 h-5 text-white" />
+                ) : null}
+              </div>
+
+              {/* Vertical line to next stop */}
+              {index < stops.length - 1 && (
+                <div
+                  className={`w-1 h-12 transition-colors ${
+                    isCompleted ? "bg-green-500" : "bg-gray-300"
+                  }`}
+                />
+              )}
+            </div>
+
+            {/* Stop info */}
+            <div className="flex-grow pt-1">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.4, delay: index * 0.05 + 0.1 }}
+              >
+                <p
+                  className={`font-semibold transition-colors ${
+                    isCurrent
+                      ? "text-blue-600 dark:text-blue-400 text-base"
+                      : isCompleted
+                        ? "text-gray-500 line-through"
+                        : "text-foreground"
+                  }`}
+                >
+                  {stop.name}
+                </p>
+                {isCurrent && (
+                  <p className="text-xs text-blue-600 dark:text-blue-400 font-semibold mt-1">
+                    🚌 Bus is here
+                  </p>
+                )}
+              </motion.div>
+            </div>
+          </motion.div>
+        );
+      })}
+    </div>
+  );
+}
 
 export function FindBusPage() {
   const [fromStop, setFromStop] = useState("");
   const [toStop, setToStop] = useState("");
-
   const [currentStopIndex, setCurrentStopIndex] = useState<number | null>(null);
-  const [driverLocation, setDriverLocation] = useState<{ lat: number; lng: number } | null>(null);
-  const [nearestStopName, setNearestStopName] = useState<string | null>(null);
-  const [nextStopName, setNextStopName] = useState<string | null>(null);
+  const [driverLocation, setDriverLocation] = useState<{
+    lat: number;
+    lng: number;
+  } | null>(null);
 
-  // search terms used to filter options in the dropdowns
+  // Search terms used to filter options in the dropdowns
   const [fromSearch, setFromSearch] = useState("");
   const [toSearch, setToSearch] = useState("");
 
   const navigate = useNavigate();
-
   const { data: backendRoutes, isLoading } = useGetAllRoutes();
   const routes: Route[] = backendRoutes?.length ? backendRoutes : DEMO_ROUTES;
   const allStops = getAllStops(routes);
 
   const search = useSearch({ strict: false }) as { busId?: string };
-const busId = search?.busId;
+  const busId = search?.busId;
 
-// calculate distance (in meters) between two lat/lng points using Haversine formula
-function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
-  const toRad = (v: number) => (v * Math.PI) / 180;
-  const R = 6371000; // earth radius in meters
-  const dLat = toRad(lat2 - lat1);
-  const dLon = toRad(lon2 - lon1);
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
-}
+  /**
+   * Listen for real-time driver location updates from Firestore
+   */
+  useEffect(() => {
+    if (!busId) return;
 
-// stopsWithCoords: array of { name, lat, lng }
-function findNearestStopIndexFromCoords(stopsWithCoords: { name: string; lat: number; lng: number }[], lat: number, lng: number) {
-  let nearestIndex = 0;
-  let minDistance = Infinity;
-  stopsWithCoords.forEach((s, i) => {
-    const d = haversineDistance(lat, lng, s.lat, s.lng);
-    if (d < minDistance) {
-      minDistance = d;
-      nearestIndex = i;
-    }
-  });
-  return nearestIndex;
-}
+    const unsubscribe = onSnapshot(
+      doc(db, "routes", busId),
+      (docSnap) => {
+        if (docSnap.exists()) {
+          const data = docSnap.data() as any;
+          const location = data.driverLocation as
+            | { lat: number; lng: number }
+            | undefined;
 
-useEffect(() => {
-  if (!busId) return;
+          if (location) {
+            setDriverLocation({ lat: location.lat, lng: location.lng });
 
-  const unsubscribe = onSnapshot(doc(db, "routes", busId), (docSnap) => {
-    if (docSnap.exists()) {
-      const data = docSnap.data() as any;
-      const location = data.driverLocation as { lat: number; lng: number } | undefined;
-
-      if (location) {
-        setDriverLocation({ lat: location.lat, lng: location.lng });
-
-        // Try to read stops with coordinates from the Firestore doc first
-        const rawStops = data.stops;
-        if (Array.isArray(rawStops) && rawStops.length && typeof rawStops[0] === "object" && rawStops[0].lat != null) {
-          const stopsWithCoords = rawStops.map((s: any) => ({ name: s.name ?? s.title ?? s.label ?? String(s), lat: Number(s.lat), lng: Number(s.lng) }));
-          const nearestIndex = findNearestStopIndexFromCoords(stopsWithCoords, location.lat, location.lng);
-          setCurrentStopIndex(nearestIndex);
-          setNearestStopName(stopsWithCoords[nearestIndex]?.name ?? null);
-          setNextStopName(stopsWithCoords[nearestIndex + 1]?.name ?? null);
-        } else {
-          // Fallback: try to infer route from demo bus mapping (busId -> routeId)
-          const demoBus = getBusById(busId, DEMO_BUSES);
-          const route = demoBus ? getRouteById(demoBus.routeId, routes) : undefined;
-          if (route && Array.isArray(route.stops) && route.stops.length) {
-            // We don't have coordinates for stops in this fallback, so clear nearest names
-            setNearestStopName(null);
-            setNextStopName(null);
-            setCurrentStopIndex(null);
+            // Calculate nearest stop based on driver location
+            const nearestIndex = findNearestStopIndex(
+              ROUTE_STOPS,
+              location.lat,
+              location.lng
+            );
+            setCurrentStopIndex(nearestIndex);
           }
         }
+      },
+      (error) => {
+        console.error("Firestore listener error:", error);
       }
-    }
-  });
+    );
 
-  return () => unsubscribe();
-}, [busId]);
-
-  useEffect(() => {
-  const routeId = "route1"; // same routeId
-
-  const unsubscribe = onSnapshot(doc(db, "routes", routeId), (docSnap) => {
-    if (docSnap.exists()) {
-      const data = docSnap.data();
-      const location = data.driverLocation;
-
-      if (location) {
-        // yaha tumhara map marker update logic lagega
-        console.log("Driver location:", location.lat, location.lng);
-      }
-    }
-  });
-
-  return () => unsubscribe();
-}, []);
+    return () => unsubscribe();
+  }, [busId]);
 
   const toStops = fromStop
     ? routes
@@ -268,24 +382,22 @@ useEffect(() => {
             className="mt-6"
           >
             <Card className="border-border">
-              <CardHeader className="pb-2">
-                <CardTitle className="font-display text-lg text-foreground">Live Bus Position</CardTitle>
+              <CardHeader className="pb-4">
+                <CardTitle className="font-display text-lg text-foreground flex items-center gap-2">
+                  <MapPin className="w-5 h-5 text-blue-500" />
+                  Live Bus Tracking
+                </CardTitle>
+                {driverLocation && (
+                  <p className="text-xs text-muted-foreground font-body mt-1">
+                    Last updated: {new Date().toLocaleTimeString()}
+                  </p>
+                )}
               </CardHeader>
               <CardContent>
-                {nearestStopName ? (
-                  <div className="text-sm space-y-1">
-                    <p>
-                      <span className="font-semibold">Bus is currently near:</span> {nearestStopName}
-                    </p>
-                    <p>
-                      <span className="font-semibold">Next Stop:</span> {nextStopName ?? "End of route"}
-                    </p>
-                  </div>
-                ) : driverLocation ? (
-                  <p className="text-sm text-muted-foreground">Bus location available — stop coordinates not configured for this route.</p>
-                ) : (
-                  <p className="text-sm text-muted-foreground">Waiting for bus location...</p>
-                )}
+                <RouteTimeline
+                  stops={ROUTE_STOPS}
+                  currentStopIndex={currentStopIndex}
+                />
               </CardContent>
             </Card>
           </motion.div>
