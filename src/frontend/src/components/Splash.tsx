@@ -14,7 +14,7 @@ export function Splash({ onFinish }: { onFinish?: () => void }) {
         <img
           src={logo}
           alt="logo"
-          className="w-48 h-48 rounded-lg object-cover shadow-xl"
+          className="w-56 h-56 rounded-lg object-contain shadow-xl"
         />
         <div className="text-white text-sm font-medium tracking-wide">Loading...</div>
       </div>

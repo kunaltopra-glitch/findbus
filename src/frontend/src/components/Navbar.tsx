@@ -64,8 +64,8 @@ export function Navbar() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2.5 group">
-            <div className="w-9 h-9 rounded-lg overflow-hidden flex items-center justify-center shadow-md group-hover:opacity-90 transition-opacity">
-              <img src={logo} alt="FindBus logo" className="w-full h-full object-cover" />
+            <div className="w-14 h-14 rounded-lg overflow-hidden flex items-center justify-center shadow-md group-hover:opacity-90 transition-opacity bg-transparent">
+              <img src={logo} alt="FindBus logo" className="w-full h-full object-contain" />
             </div>
             <div>
               <span className="text-white font-display font-bold text-xl tracking-tight">
