@@ -123,13 +123,14 @@ export function BookTicketPage() {
                         <SelectValue placeholder="Select boarding stop" />
                       </SelectTrigger>
                       <SelectContent>
-                        <div className="p-2">
+                        <div className="p-2" onClick={(e) => e.stopPropagation()}>
                           <div className="relative">
                             <input
                               type="text"
                               placeholder="Search stops..."
                               value={fromSearch}
                               onChange={(e) => setFromSearch(e.target.value)}
+                              onClick={(e) => e.stopPropagation()}
                               className="w-full border border-input rounded px-2 py-1 text-sm"
                             />
                             <Search className="absolute right-2 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
@@ -179,13 +180,14 @@ export function BookTicketPage() {
                         />
                       </SelectTrigger>
                       <SelectContent>
-                        <div className="p-2">
+                        <div className="p-2" onClick={(e) => e.stopPropagation()}>
                           <div className="relative">
                             <input
                               type="text"
                               placeholder="Search stops..."
                               value={toSearch}
                               onChange={(e) => setToSearch(e.target.value)}
+                              onClick={(e) => e.stopPropagation()}
                               className="w-full border border-input rounded px-2 py-1 text-sm"
                             />
                             <Search className="absolute right-2 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
