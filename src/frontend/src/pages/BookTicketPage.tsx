@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useNavigate } from "@tanstack/react-router";
-import { ArrowRight, Info, MapPin, Ticket, Search } from "lucide-react";
+import { ArrowRight, Info, MapPin, Ticket } from "lucide-react";
 import { motion } from "motion/react";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
@@ -26,10 +26,7 @@ const TICKET_BENEFITS = [
 export function BookTicketPage() {
   const [fromStop, setFromStop] = useState("");
   const [toStop, setToStop] = useState("");
-  const [fromSearch, setFromSearch] = useState("");
-  const [toSearch, setToSearch] = useState("");
-  const fromSearchRef = useRef<HTMLInputElement>(null);
-  const toSearchRef = useRef<HTMLInputElement>(null);
+  
   const navigate = useNavigate();
 
   const { data: backendRoutes } = useGetAllRoutes();
@@ -38,12 +35,8 @@ export function BookTicketPage() {
 
   const toStops = fromStop ? getDestinationsFromStop(fromStop, routes) : allStops;
 
-  const filteredFromStops = allStops.filter((stop) =>
-    stop.toLowerCase().includes(fromSearch.toLowerCase()),
-  );
-  const filteredToStops = toStops.filter((stop) =>
-    stop.toLowerCase().includes(toSearch.toLowerCase()),
-  );
+  const filteredFromStops = allStops;
+  const filteredToStops = toStops;
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -117,37 +110,12 @@ export function BookTicketPage() {
                       onValueChange={(v) => {
                         setFromStop(v);
                         setToStop("");
-                        setFromSearch("");
-                        setToSearch("");
-                      }}
-                      onOpenChange={(open) => {
-                        if (open) {
-                          setTimeout(() => fromSearchRef.current?.focus(), 0);
-                        }
                       }}
                     >
                       <SelectTrigger className="font-body h-11">
                         <SelectValue placeholder="Select boarding stop" />
                       </SelectTrigger>
                       <SelectContent>
-                        <div 
-                          className="p-2"
-                          onMouseDown={(e) => e.stopPropagation()}
-                          onPointerDown={(e) => e.stopPropagation()}
-                        >
-                          <div className="relative">
-                            <input
-                              ref={fromSearchRef}
-                              type="text"
-                              placeholder="Search stops..."
-                              value={fromSearch}
-                              onChange={(e) => setFromSearch(e.target.value)}
-                              onPointerDown={(e) => e.stopPropagation}
-                              className="w-full border border-input rounded px-2 py-1 text-sm"
-                            />
-                            <Search className="absolute right-2 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-                          </div>
-                        </div>
                         {filteredFromStops.map((stop) => (
                           <SelectItem
                             key={stop}
@@ -181,11 +149,6 @@ export function BookTicketPage() {
                       value={toStop}
                       onValueChange={setToStop}
                       disabled={!fromStop}
-                      onOpenChange={(open) => {
-                        if (open) {
-                          setTimeout(() => toSearchRef.current?.focus(), 0);
-                        }
-                      }}
                     >
                       <SelectTrigger className="font-body h-11">
                         <SelectValue
@@ -197,24 +160,6 @@ export function BookTicketPage() {
                         />
                       </SelectTrigger>
                       <SelectContent>
-                        <div 
-                          className="p-2"
-                          onMouseDown={(e) => e.stopPropagation()}
-                          onPointerDown={(e) => e.stopPropagation()}
-                        >
-                          <div className="relative">
-                            <input
-                              ref={toSearchRef}
-                              type="text"
-                              placeholder="Search stops..."
-                              value={toSearch}
-                              onChange={(e) => setToSearch(e.target.value)}
-                              onPointerDown={(e) => e.stopPropagation()}
-                              className="w-full border border-input rounded px-2 py-1 text-sm"
-                            />
-                            <Search className="absolute right-2 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-                          </div>
-                        </div>
                         {filteredToStops.map((stop) => (
                           <SelectItem
                             key={stop}
