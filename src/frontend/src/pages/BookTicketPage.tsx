@@ -132,8 +132,8 @@ export function BookTicketPage() {
                       <SelectContent>
                         <div 
                           className="p-2"
-                          onMouseDown={(e) => e.preventDefault()}
-                          onPointerDown={(e) => e.preventDefault()}
+                          onMouseDown={(e) => e.stopPropagation()}
+                          onPointerDown={(e) => e.stopPropagation()}
                         >
                           <div className="relative">
                             <input
@@ -142,10 +142,7 @@ export function BookTicketPage() {
                               placeholder="Search stops..."
                               value={fromSearch}
                               onChange={(e) => setFromSearch(e.target.value)}
-                              onMouseDown={(e) => e.stopPropagation()}
-                              onPointerDown={(e) => e.stopPropagation()}
-                              onKeyDown={(e) => e.stopPropagation()}
-                              onKeyUp={(e) => e.stopPropagation()}
+                              onPointerDown={(e) => e.stopPropagation}
                               className="w-full border border-input rounded px-2 py-1 text-sm"
                             />
                             <Search className="absolute right-2 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
@@ -202,8 +199,8 @@ export function BookTicketPage() {
                       <SelectContent>
                         <div 
                           className="p-2"
-                          onMouseDown={(e) => e.preventDefault()}
-                          onPointerDown={(e) => e.preventDefault()}
+                          onMouseDown={(e) => e.stopPropagation()}
+                          onPointerDown={(e) => e.stopPropagation()}
                         >
                           <div className="relative">
                             <input
@@ -212,10 +209,7 @@ export function BookTicketPage() {
                               placeholder="Search stops..."
                               value={toSearch}
                               onChange={(e) => setToSearch(e.target.value)}
-                              onMouseDown={(e) => e.stopPropagation()}
                               onPointerDown={(e) => e.stopPropagation()}
-                              onKeyDown={(e) => e.stopPropagation()}
-                              onKeyUp={(e) => e.stopPropagation()}
                               className="w-full border border-input rounded px-2 py-1 text-sm"
                             />
                             <Search className="absolute right-2 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
