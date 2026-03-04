@@ -2,7 +2,7 @@
 
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
-import type * as React from "react";
+import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -54,11 +54,49 @@ function SelectContent({
   className,
   children,
   position = "popper",
+  // allow callers to override these if needed
+  onPointerDownOutside,
+  onFocusOutside,
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Content>) {
+  // keep a ref to the content element so we can determine when events
+  // originate from *inside* the dropdown. Radix's own DismissableLayer
+  // fires `onPointerDownOutside` and `onFocusOutside` for clicks/focuses
+  // outside the layer; we want to ignore those that actually originate
+  // from inside (eg. when the search input gets focus).
+  const contentRef = React.useRef<HTMLDivElement | null>(null);
+
+  const handlePointerDownOutside = React.useCallback(
+    (event: PointerEvent) => {
+      // ignore pointer events that actually hit somewhere inside the
+      // content (including our search field). the `contains` check
+      // handles clicks that bubble up from descendants as well.
+      if (contentRef.current?.contains(event.target as Node)) {
+        event.preventDefault();
+        return;
+      }
+      onPointerDownOutside == null || onPointerDownOutside(event);
+    },
+    [onPointerDownOutside],
+  );
+
+  const handleFocusOutside = React.useCallback(
+    (event: FocusEvent) => {
+      // if the new focus target is inside the dropdown we don't want to
+      // treat it as 'outside'. `relatedTarget` is the element gaining focus.
+      if (contentRef.current?.contains(event.relatedTarget as Node)) {
+        event.preventDefault();
+        return;
+      }
+      onFocusOutside == null || onFocusOutside(event);
+    },
+    [onFocusOutside],
+  );
+
   return (
     <SelectPrimitive.Portal>
       <SelectPrimitive.Content
+        ref={contentRef}
         data-slot="select-content"
         className={cn(
           "bg-popover text-popover-foreground data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 relative z-50 min-w-[8rem] origin-(--radix-select-content-transform-origin) overflow-x-hidden overflow-y-auto rounded-md border shadow-md max-h-48 sm:max-h-[var(--radix-select-content-available-height)]",
@@ -67,6 +105,10 @@ function SelectContent({
           className,
         )}
         position={position}
+        onPointerDownOutside={handlePointerDownOutside}
+        onFocusOutside={handleFocusOutside}
+        onMouseDown={(e) => e.stopPropagation()}
+        onPointerDown={(e) => e.stopPropagation()}
         {...props}
       >
         <SelectScrollUpButton />
