@@ -9,7 +9,7 @@ import { useState, useEffect} from "react";
 import { toast } from "sonner";
 import type { Route } from "../backend.d";
 import { useGetAllRoutes } from "../hooks/useQueries";
-import { DEMO_ROUTES, findRouteForStops, getAllStops } from "../utils/demoData";
+import { DEMO_ROUTES, findRouteForStops, getAllStops, DEMO_BUSES, getBusById, getRouteById } from "../utils/demoData";
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../lib/firebase"; 
 import { useSearch } from "@tanstack/react-router";
@@ -21,6 +21,9 @@ export function FindBusPage() {
   const [toStop, setToStop] = useState("");
 
   const [currentStopIndex, setCurrentStopIndex] = useState<number | null>(null);
+  const [driverLocation, setDriverLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [nearestStopName, setNearestStopName] = useState<string | null>(null);
+  const [nextStopName, setNextStopName] = useState<string | null>(null);
 
   // search terms used to filter options in the dropdowns
   const [fromSearch, setFromSearch] = useState("");
@@ -35,42 +38,66 @@ export function FindBusPage() {
   const search = useSearch({ strict: false }) as { busId?: string };
 const busId = search?.busId;
 
-function findNearestStopIndex(lat: number, lng: number): number {
+// calculate distance (in meters) between two lat/lng points using Haversine formula
+function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
+  const toRad = (v: number) => (v * Math.PI) / 180;
+  const R = 6371000; // earth radius in meters
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
+// stopsWithCoords: array of { name, lat, lng }
+function findNearestStopIndexFromCoords(stopsWithCoords: { name: string; lat: number; lng: number }[], lat: number, lng: number) {
   let nearestIndex = 0;
   let minDistance = Infinity;
-
-  routes.forEach((route) => {
-    route.stops.forEach((stop, index) => {
-      // Simplified distance calculation (you may want to use actual coordinates)
-      const distance = Math.abs(index);
-      if (distance < minDistance) {
-        minDistance = distance;
-        nearestIndex = index;
-      }
-    });
+  stopsWithCoords.forEach((s, i) => {
+    const d = haversineDistance(lat, lng, s.lat, s.lng);
+    if (d < minDistance) {
+      minDistance = d;
+      nearestIndex = i;
+    }
   });
-
   return nearestIndex;
 }
 
 useEffect(() => {
   if (!busId) return;
 
-  const unsubscribe = onSnapshot(
-    doc(db, "routes", busId),
-    (docSnap) => {
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        const location = data.driverLocation;
+  const unsubscribe = onSnapshot(doc(db, "routes", busId), (docSnap) => {
+    if (docSnap.exists()) {
+      const data = docSnap.data() as any;
+      const location = data.driverLocation as { lat: number; lng: number } | undefined;
 
       if (location) {
-      const nearestIndex = findNearestStopIndex(location.lat, location.lng);
-      setCurrentStopIndex(nearestIndex);
-     }
+        setDriverLocation({ lat: location.lat, lng: location.lng });
 
+        // Try to read stops with coordinates from the Firestore doc first
+        const rawStops = data.stops;
+        if (Array.isArray(rawStops) && rawStops.length && typeof rawStops[0] === "object" && rawStops[0].lat != null) {
+          const stopsWithCoords = rawStops.map((s: any) => ({ name: s.name ?? s.title ?? s.label ?? String(s), lat: Number(s.lat), lng: Number(s.lng) }));
+          const nearestIndex = findNearestStopIndexFromCoords(stopsWithCoords, location.lat, location.lng);
+          setCurrentStopIndex(nearestIndex);
+          setNearestStopName(stopsWithCoords[nearestIndex]?.name ?? null);
+          setNextStopName(stopsWithCoords[nearestIndex + 1]?.name ?? null);
+        } else {
+          // Fallback: try to infer route from demo bus mapping (busId -> routeId)
+          const demoBus = getBusById(busId, DEMO_BUSES);
+          const route = demoBus ? getRouteById(demoBus.routeId, routes) : undefined;
+          if (route && Array.isArray(route.stops) && route.stops.length) {
+            // We don't have coordinates for stops in this fallback, so clear nearest names
+            setNearestStopName(null);
+            setNextStopName(null);
+            setCurrentStopIndex(null);
+          }
+        }
       }
     }
-  );
+  });
 
   return () => unsubscribe();
 }, [busId]);
@@ -232,6 +259,37 @@ useEffect(() => {
             </CardContent>
           </Card>
         </motion.div>
+
+        {busId && (
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.15 }}
+            className="mt-6"
+          >
+            <Card className="border-border">
+              <CardHeader className="pb-2">
+                <CardTitle className="font-display text-lg text-foreground">Live Bus Position</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {nearestStopName ? (
+                  <div className="text-sm space-y-1">
+                    <p>
+                      <span className="font-semibold">Bus is currently near:</span> {nearestStopName}
+                    </p>
+                    <p>
+                      <span className="font-semibold">Next Stop:</span> {nextStopName ?? "End of route"}
+                    </p>
+                  </div>
+                ) : driverLocation ? (
+                  <p className="text-sm text-muted-foreground">Bus location available — stop coordinates not configured for this route.</p>
+                ) : (
+                  <p className="text-sm text-muted-foreground">Waiting for bus location...</p>
+                )}
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
 
         {/* Available Routes */}
         <motion.div
