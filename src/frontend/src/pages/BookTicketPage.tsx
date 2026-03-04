@@ -123,7 +123,12 @@ export function BookTicketPage() {
                         <SelectValue placeholder="Select boarding stop" />
                       </SelectTrigger>
                       <SelectContent>
-                        <div className="p-2" onClick={(e) => e.stopPropagation()}>
+                        <div 
+                          className="p-2"
+                          onClick={(e) => e.stopPropagation()}
+                          onPointerDown={(e) => e.stopPropagation()}
+                          onMouseDown={(e) => e.preventDefault()}
+                        >
                           <div className="relative">
                             <input
                               type="text"
@@ -131,6 +136,8 @@ export function BookTicketPage() {
                               value={fromSearch}
                               onChange={(e) => setFromSearch(e.target.value)}
                               onClick={(e) => e.stopPropagation()}
+                              onPointerDown={(e) => e.stopPropagation()}
+                              onMouseDown={(e) => e.preventDefault()}
                               onFocus={(e) => e.stopPropagation()}
                               onKeyDown={(e) => e.stopPropagation()}
                               onKeyUp={(e) => e.stopPropagation()}
@@ -184,7 +191,12 @@ export function BookTicketPage() {
                         />
                       </SelectTrigger>
                       <SelectContent>
-                        <div className="p-2" onClick={(e) => e.stopPropagation()}>
+                        <div 
+                          className="p-2"
+                          onClick={(e) => e.stopPropagation()}
+                          onPointerDown={(e) => e.stopPropagation()}
+                          onMouseDown={(e) => e.preventDefault()}
+                        >
                           <div className="relative">
                             <input
                               type="text"
@@ -192,6 +204,8 @@ export function BookTicketPage() {
                               value={toSearch}
                               onChange={(e) => setToSearch(e.target.value)}
                               onClick={(e) => e.stopPropagation()}
+                              onPointerDown={(e) => e.stopPropagation()}
+                              onMouseDown={(e) => e.preventDefault()}
                               onFocus={(e) => e.stopPropagation()}
                               onKeyDown={(e) => e.stopPropagation()}
                               onKeyUp={(e) => e.stopPropagation()}
