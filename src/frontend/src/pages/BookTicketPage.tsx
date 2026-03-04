@@ -10,7 +10,7 @@ import {
 import { useNavigate } from "@tanstack/react-router";
 import { ArrowRight, Info, MapPin, Ticket, Search } from "lucide-react";
 import { motion } from "motion/react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
 import type { Route } from "../backend.d";
 import { useGetAllRoutes } from "../hooks/useQueries";
@@ -28,6 +28,8 @@ export function BookTicketPage() {
   const [toStop, setToStop] = useState("");
   const [fromSearch, setFromSearch] = useState("");
   const [toSearch, setToSearch] = useState("");
+  const fromSearchRef = useRef<HTMLInputElement>(null);
+  const toSearchRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
   const { data: backendRoutes } = useGetAllRoutes();
@@ -118,6 +120,11 @@ export function BookTicketPage() {
                         setFromSearch("");
                         setToSearch("");
                       }}
+                      onOpenChange={(open) => {
+                        if (open) {
+                          setTimeout(() => fromSearchRef.current?.focus(), 0);
+                        }
+                      }}
                     >
                       <SelectTrigger className="font-body h-11">
                         <SelectValue placeholder="Select boarding stop" />
@@ -125,24 +132,21 @@ export function BookTicketPage() {
                       <SelectContent>
                         <div 
                           className="p-2"
-                          onClick={(e) => e.stopPropagation()}
-                          onPointerDown={(e) => e.stopPropagation()}
                           onMouseDown={(e) => e.preventDefault()}
+                          onPointerDown={(e) => e.preventDefault()}
                         >
                           <div className="relative">
                             <input
+                              ref={fromSearchRef}
                               type="text"
                               placeholder="Search stops..."
                               value={fromSearch}
                               onChange={(e) => setFromSearch(e.target.value)}
-                              onClick={(e) => e.stopPropagation()}
+                              onMouseDown={(e) => e.stopPropagation()}
                               onPointerDown={(e) => e.stopPropagation()}
-                              onMouseDown={(e) => e.preventDefault()}
-                              onFocus={(e) => e.stopPropagation()}
                               onKeyDown={(e) => e.stopPropagation()}
                               onKeyUp={(e) => e.stopPropagation()}
                               className="w-full border border-input rounded px-2 py-1 text-sm"
-                              autoFocus
                             />
                             <Search className="absolute right-2 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                           </div>
@@ -180,6 +184,11 @@ export function BookTicketPage() {
                       value={toStop}
                       onValueChange={setToStop}
                       disabled={!fromStop}
+                      onOpenChange={(open) => {
+                        if (open) {
+                          setTimeout(() => toSearchRef.current?.focus(), 0);
+                        }
+                      }}
                     >
                       <SelectTrigger className="font-body h-11">
                         <SelectValue
@@ -193,24 +202,21 @@ export function BookTicketPage() {
                       <SelectContent>
                         <div 
                           className="p-2"
-                          onClick={(e) => e.stopPropagation()}
-                          onPointerDown={(e) => e.stopPropagation()}
                           onMouseDown={(e) => e.preventDefault()}
+                          onPointerDown={(e) => e.preventDefault()}
                         >
                           <div className="relative">
                             <input
+                              ref={toSearchRef}
                               type="text"
                               placeholder="Search stops..."
                               value={toSearch}
                               onChange={(e) => setToSearch(e.target.value)}
-                              onClick={(e) => e.stopPropagation()}
+                              onMouseDown={(e) => e.stopPropagation()}
                               onPointerDown={(e) => e.stopPropagation()}
-                              onMouseDown={(e) => e.preventDefault()}
-                              onFocus={(e) => e.stopPropagation()}
                               onKeyDown={(e) => e.stopPropagation()}
                               onKeyUp={(e) => e.stopPropagation()}
                               className="w-full border border-input rounded px-2 py-1 text-sm"
-                              autoFocus
                             />
                             <Search className="absolute right-2 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                           </div>
