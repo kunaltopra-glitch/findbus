@@ -132,6 +132,7 @@ export function BookTicketPage() {
                               onChange={(e) => setFromSearch(e.target.value)}
                               onClick={(e) => e.stopPropagation()}
                               className="w-full border border-input rounded px-2 py-1 text-sm"
+                              autoFocus
                             />
                             <Search className="absolute right-2 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                           </div>
@@ -189,6 +190,7 @@ export function BookTicketPage() {
                               onChange={(e) => setToSearch(e.target.value)}
                               onClick={(e) => e.stopPropagation()}
                               className="w-full border border-input rounded px-2 py-1 text-sm"
+                              autoFocus
                             />
                             <Search className="absolute right-2 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                           </div>
