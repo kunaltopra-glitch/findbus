@@ -2,7 +2,7 @@ from PIL import Image
 import os
 
 # Load the image
-input_path = r"c:\Users\Lenovo\Downloads\findbus-main\findbus-main\public\icon.jpg"
+input_path = r"c:\Users\Lenovo\Downloads\findbus-main\findbus-main\public\icon.png"
 output_path = r"c:\Users\Lenovo\Downloads\findbus-main\findbus-main\public\icon.png"
 
 # Open the image
@@ -34,7 +34,7 @@ img.putdata(new_data)
 # Save as PNG with high quality
 img.save(output_path, "PNG", quality=95)
 
-print(f"Successfully converted icon.jpg to icon.png")
+print(f"Successfully converted to icon.png")
 print(f"Output saved to: {output_path}")
 print(f"Image size: {img.size}")
 print(f"Image mode: {img.mode}")

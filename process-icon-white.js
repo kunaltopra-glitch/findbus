@@ -11,7 +11,7 @@ function colorDistanceSq(r1,g1,b1,r2,g2,b2){
 }
 
 async function processWhiteBG(){
-  const inPath = path.join(__dirname, 'public/icon.jpg');
+  const inPath = path.join(__dirname, 'public/icon.png');
   const outPath = path.join(__dirname, 'public/icon.png');
   const image = await Jimp.read(inPath);
 

@@ -7,8 +7,8 @@ const __dirname = path.dirname(__filename);
 
 async function processIcon() {
   try {
-    console.log('Loading icon.jpg...');
-    const image = await Jimp.read(path.join(__dirname, 'public/icon.jpg'));
+    console.log('Loading icon.png...');
+    const image = await Jimp.read(path.join(__dirname, 'public/icon.png'));
     
     console.log('Processing image - removing dark background with edge preservation...');
     

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-const logo = "/icon.jpg";
+const logo = "/icon.png";
 
 export function Splash({ onFinish }: { onFinish?: () => void }) {
   useEffect(() => {

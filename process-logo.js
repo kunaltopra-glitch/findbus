@@ -3,7 +3,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const inputPath = path.join(__dirname, 'public', 'icon.jpg');
+const inputPath = path.join(__dirname, 'public', 'icon.png');
 const outputPath = path.join(__dirname, 'public', 'icon.png');
 
 async function processLogo() {
