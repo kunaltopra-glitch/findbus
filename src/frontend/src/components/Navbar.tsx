@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
-import logo from "../pages/icom.jpg";
+const logo = "/icom.jpg";
 import { Bus, Menu, X, LogOut, User } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
