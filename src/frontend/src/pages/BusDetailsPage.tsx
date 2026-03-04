@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useNavigate, useParams, useSearch } from "@tanstack/react-router";
+import type { BusTiming, Route } from "../backend.d";
 import {
   AlertCircle,
   ArrowLeft,
@@ -17,11 +18,12 @@ import {
 } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
-import { useGetBusDetails } from "../hooks/useQueries";
+import { useGetBusDetails, useGetTimingsByRoute } from "../hooks/useQueries";
 import { useUpdateBusPosition } from "../hooks/useQueries";
 import {
   DEMO_BUSES,
   DEMO_ROUTES,
+  DEMO_TIMINGS,
   getBusById,
   getRouteById,
 } from "../utils/demoData";
@@ -43,6 +45,13 @@ export function BusDetailsPage() {
   const bus = backendBus ?? demoBus;
 
   const route = getRouteById(bus?.routeId ?? "", DEMO_ROUTES);
+
+  // pick the matching timing record for this bus (demo or backend)
+  const { data: backendTimings } = useGetTimingsByRoute(bus?.routeId ?? "");
+  const allTimings: BusTiming[] = backendTimings?.length
+    ? backendTimings
+    : DEMO_TIMINGS.filter((t) => t.routeId === bus?.routeId);
+  const timing = allTimings.find((t) => t.busId === busId);
 
   const [currentStop, setCurrentStop] = useState<number>(
     Number(bus?.currentStopIndex ?? 0),
@@ -216,7 +225,7 @@ export function BusDetailsPage() {
                 <InfoItem
                   icon={Clock}
                   label="ETA (Destination)"
-                  value={route ? getETA(currentStop, route.stops) : "—"}
+                  value={route ? getETA(currentStop, route.stops, timing) : "—"}
                 />
               </div>
             </CardContent>
@@ -408,12 +417,37 @@ function InfoItem({
   );
 }
 
-function getETA(currentIdx: number, stops: string[]): string {
-  // Ensure stops are in correct order (ascending indices)
+function getETA(currentIdx: number, stops: string[], timing?: BusTiming): string {
+  // if we have a schedule entry for this bus use it
+  if (timing) {
+    const nowMs = Date.now();
+    const departureMs = Number(timing.departureTime) / 1_000_000;
+    const arrivalMs = Number(timing.arrivalTime) / 1_000_000;
+
+    // if the bus has already reached its destination
+    if (nowMs >= arrivalMs) return "Arrived";
+
+    // compute remaining stops
+    const totalStops = Math.max(stops.length - 1, 1);
+    const remainingStops = Math.max(totalStops - currentIdx, 0);
+
+    // linear interpolation between departure and arrival based on progress
+    const totalDuration = arrivalMs - departureMs;
+    const remainingDuration = (remainingStops / totalStops) * totalDuration;
+
+    // if the bus hasn't departed yet, base on departure time
+    const etaMs = nowMs < departureMs ? departureMs + remainingDuration : nowMs + remainingDuration;
+    const etaDate = new Date(etaMs);
+    return etaDate.toLocaleTimeString("en-IN", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+  }
+
+  // fallback – simple 35 minutes per remaining stop (legacy/demo behaviour)
   const remaining = stops.length - 1 - currentIdx;
   if (remaining <= 0) return "Arrived";
-  
-  // Calculate approximate time: 35 minutes per remaining stop
   const minutes = remaining * 35;
   const now = new Date();
   now.setMinutes(now.getMinutes() + minutes);

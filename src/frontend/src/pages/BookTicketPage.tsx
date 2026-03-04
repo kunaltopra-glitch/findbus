@@ -131,6 +131,9 @@ export function BookTicketPage() {
                               value={fromSearch}
                               onChange={(e) => setFromSearch(e.target.value)}
                               onClick={(e) => e.stopPropagation()}
+                              onFocus={(e) => e.stopPropagation()}
+                              onKeyDown={(e) => e.stopPropagation()}
+                              onKeyUp={(e) => e.stopPropagation()}
                               className="w-full border border-input rounded px-2 py-1 text-sm"
                               autoFocus
                             />
@@ -189,6 +192,9 @@ export function BookTicketPage() {
                               value={toSearch}
                               onChange={(e) => setToSearch(e.target.value)}
                               onClick={(e) => e.stopPropagation()}
+                              onFocus={(e) => e.stopPropagation()}
+                              onKeyDown={(e) => e.stopPropagation()}
+                              onKeyUp={(e) => e.stopPropagation()}
                               className="w-full border border-input rounded px-2 py-1 text-sm"
                               autoFocus
                             />
