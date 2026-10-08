@@ -149,6 +149,7 @@ function TimingCard({
   };
 
   const status = bus?.status ?? "OnTime";
+  const statusLabel = String(status) === "OnTime" ? "On Time" : String(status);
 
   return (
     <motion.div
@@ -209,7 +210,7 @@ function TimingCard({
               <Badge
                 className={`text-xs font-body font-medium border ${statusColors[String(status)] ?? statusColors.OnTime}`}
               >
-                {String(status)}
+                {statusLabel}
               </Badge>
               <div className="flex gap-2">
                 <Button

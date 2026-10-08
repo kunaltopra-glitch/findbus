@@ -17,7 +17,6 @@ import {
   Mail,
   MapPin,
   MessageSquare,
-  Phone,
 } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
@@ -25,61 +24,61 @@ import { toast } from "sonner";
 
 const FAQS = [
   {
-    q: "How does live bus tracking work?",
-    a: "FindBus uses a combination of GPS transponders installed in Haryana Roadways buses and cell-tower triangulation to determine real-time bus locations. Our system updates every 10-30 seconds, giving you the most accurate position data possible. The AI layer processes this raw data to calculate precise ETAs based on current speed, traffic, and route patterns.",
+    q: "Does this preview show live bus tracking?",
+    a: "No. Bus Connect currently uses sample routes, schedules, and bus details. It is not connected to live GPS or bus-operator systems.",
   },
   {
-    q: "Why is my bus showing a different location than expected?",
-    a: "Occasional discrepancies can occur due to GPS signal loss in tunnels or dense urban areas, temporary connectivity issues with the transponder, or the bus taking a short detour due to road conditions. Data typically self-corrects within 1-2 minutes when the bus returns to coverage. If the issue persists, contact our helpline at 1800-180-2345.",
+    q: "Can I book a real ticket here?",
+    a: "The booking and payment screens demonstrate the ticket flow only. They do not reserve a seat, charge a payment method, or issue a valid travel ticket.",
   },
   {
-    q: "How do I book a ticket online?",
-    a: "Booking is simple: (1) Go to the Book Ticket page, (2) Select your From and To stops, (3) Choose a bus timing that suits you, (4) Enter passenger details and preferred payment method, (5) Pay via UPI or Debit/Credit Card. You'll receive a digital ticket with a unique Ticket ID immediately after payment.",
+    q: "How do I explore a route?",
+    a: "Open Find Bus or Book Ticket, choose a boarding stop and destination, then select one of the scheduled departures in the sample network.",
   },
   {
     q: "What is the cancellation and refund policy?",
-    a: "Cancellations are free within 1 hour of booking (full refund). Between 1 hour and 2-4 hours before departure, you receive a 75% refund. Within 2 hours of departure, no refund is processed. Refunds are credited to your original payment method within 5-7 working days. Visit Customer Support or call us to initiate a cancellation.",
+    a: "This preview does not make bookings or process cancellations and refunds. For an actual journey, check the policies of the bus operator or ticket provider you book with.",
   },
   {
-    q: "Which payment methods are accepted?",
-    a: "We accept all major UPI apps (PhonePe, Google Pay, Paytm, BHIM), Debit Cards (Visa, Mastercard, RuPay), and Credit Cards (Visa, Mastercard). Net Banking support is coming soon. All transactions are secured with 256-bit SSL encryption. Cash payment is available at bus stand ticket counters.",
+    q: "Does the payment screen charge me?",
+    a: "No. Payment is simulated for this demo. No card or UPI transaction is submitted.",
   },
   {
     q: "What should I do if I miss my bus?",
-    a: "If you miss your booked bus, our Missed Bus policy allows you to board the next available bus on the same route on the same day without additional charges (subject to seat availability). Show your original digital ticket to the conductor. For more assistance, contact us at 1800-180-2345 or support@findbus.hr.gov.in.",
+    a: "This preview does not issue valid tickets or provide operator support. Contact the bus operator or ticket provider for help with an actual journey.",
   },
 ];
 
 const CONTACT_CARDS = [
   {
-    icon: Phone,
-    title: "Phone Support",
-    info: "1800-180-2345",
-    sub: "Toll Free • 24×7",
+    icon: MapPin,
+    title: "Routes & stops",
+    info: "Explore the sample network",
+    sub: "Choose a route to see its stops",
     color: "text-[oklch(0.45_0.15_145)]",
     bg: "bg-[oklch(0.92_0.08_145)]",
   },
   {
-    icon: Mail,
-    title: "Email Support",
-    info: "support@findbus.hr.gov.in",
-    sub: "Mon–Sat, 9AM–6PM",
+    icon: MessageSquare,
+    title: "Booking flow",
+    info: "Try the ticket demo",
+    sub: "No real payment is processed",
     color: "text-[oklch(0.38_0.12_264)]",
     bg: "bg-[oklch(0.28_0.12_264/0.1)]",
   },
   {
-    icon: MapPin,
-    title: "Office Address",
-    info: "HRTC Head Office, Bus Stand Road",
-    sub: "Rohtak – 124001, Haryana",
+    icon: Mail,
+    title: "Contact form",
+    info: "Preview only",
+    sub: "Messages are not sent to a team",
     color: "text-[oklch(0.65_0.18_50)]",
     bg: "bg-[oklch(0.72_0.21_50/0.1)]",
   },
   {
     icon: Clock,
-    title: "Office Hours",
-    info: "Mon–Sat: 9:00 AM – 6:00 PM",
-    sub: "Closed on Sundays & Public Holidays",
+    title: "Sample schedules",
+    info: "Illustrative departures",
+    sub: "Confirm real times with the operator",
     color: "text-[oklch(0.55_0.12_264)]",
     bg: "bg-[oklch(0.28_0.12_264/0.08)]",
   },
@@ -102,7 +101,7 @@ export function CustomerSupportPage() {
     await new Promise((res) => setTimeout(res, 1500));
     setSubmitting(false);
     setSubmitted(true);
-    toast.success("Message sent! We'll get back to you within 24 hours.");
+    toast.success("Demo message submitted. It was not sent to a support team.");
     setName("");
     setEmail("");
     setMessage("");
@@ -130,8 +129,8 @@ export function CustomerSupportPage() {
               How Can We Help You?
             </h1>
             <p className="text-[oklch(0.75_0.04_250)] font-body max-w-xl mx-auto">
-              Get answers to common questions or reach out to our support team.
-              We're here to help 24×7.
+              Find answers about routes and the booking demo. This preview is
+              not connected to a live support team.
             </p>
           </motion.div>
         </div>

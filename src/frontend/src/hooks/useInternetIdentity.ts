@@ -81,7 +81,7 @@ async function createAuthClient(
       ...createOptions?.idleOptions,
     },
     loginOptions: {
-      derivationOrigin: config.ii_derivation_origin,
+      derivationOrigin: config?.ii_derivation_origin,
     },
     ...createOptions,
   };

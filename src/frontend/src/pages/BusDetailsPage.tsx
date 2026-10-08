@@ -49,7 +49,7 @@ export function BusDetailsPage() {
   );
   const [speed, setSpeed] = useState(bus?.speed ?? 60);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const { mutate: updatePosition } = useUpdateBusPosition();
+  const { mutate: updatePosition, isBackendAvailable } = useUpdateBusPosition();
 
   // Sync currentStop when bus data loads
   useEffect(() => {
@@ -70,7 +70,9 @@ export function BusDetailsPage() {
           // Update speed slightly
           setSpeed(Math.floor(Math.random() * 20 + 50));
           // Call backend (best-effort)
-          updatePosition({ busId, currentStopIndex: BigInt(next) });
+          if (isBackendAvailable) {
+            updatePosition({ busId, currentStopIndex: BigInt(next) });
+          }
         }
         return next;
       });
@@ -79,7 +81,7 @@ export function BusDetailsPage() {
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [busId, route, bus?.status, updatePosition]);
+  }, [busId, route, bus?.status, isBackendAvailable, updatePosition]);
 
   const statusConfig: Record<
     string,
@@ -157,7 +159,7 @@ export function BusDetailsPage() {
                 <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-1.5 mb-3">
                   <Bus className="w-3.5 h-3.5 text-[oklch(0.82_0.18_55)]" />
                   <span className="text-[oklch(0.88_0.12_55)] text-xs font-body font-semibold uppercase tracking-wider">
-                    Live Bus Details
+                    Sample Bus Details
                   </span>
                 </div>
                 <h1 className="font-display font-extrabold text-3xl text-blue-300">
@@ -209,13 +211,13 @@ export function BusDetailsPage() {
                 <InfoItem icon={Bus} label="Bus Type" value={bus.busType} />
                 <InfoItem
                   icon={Gauge}
-                  label="Current Speed"
+                  label="Sample Speed"
                   value={`${speed} km/h`}
                   highlight
                 />
                 <InfoItem
                   icon={Clock}
-                  label="ETA (Destination)"
+                  label="Illustrative ETA"
                   value={route ? getETA(currentStop, route.stops) : "—"}
                 />
               </div>
@@ -223,7 +225,7 @@ export function BusDetailsPage() {
           </Card>
         </motion.div>
 
-        {/* Live Route Timeline */}
+        {/* Simulated Route Timeline */}
         {route && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -234,10 +236,10 @@ export function BusDetailsPage() {
               <CardHeader className="pb-3 border-b">
                 <CardTitle className="font-display text-base flex items-center gap-2">
                   <MapPin className="w-4 h-4 text-[oklch(0.72_0.21_50)]" />
-                  Live Route Tracking
+                  Simulated Route Preview
                   <span className="ml-auto flex items-center gap-1 text-xs text-[oklch(0.58_0.12_145)] font-body font-medium bg-[oklch(0.92_0.08_145)] px-2 py-0.5 rounded-full">
                     <span className="w-1.5 h-1.5 rounded-full bg-[oklch(0.58_0.12_145)] pulse-dot" />
-                    Live
+                    Demo
                   </span>
                 </CardTitle>
               </CardHeader>
@@ -307,7 +309,7 @@ export function BusDetailsPage() {
                               </p>
                               {isCurrentStop && (
                                 <p className="text-xs text-[oklch(0.72_0.21_50)] font-body font-medium">
-                                  Bus is here
+                                  Sample position
                                 </p>
                               )}
                               {isDestination && !isCurrentStop && (
@@ -343,10 +345,10 @@ export function BusDetailsPage() {
               <CardContent className="p-5 flex items-center justify-between flex-wrap gap-4">
                 <div>
                   <h3 className="font-display font-semibold text-foreground">
-                    Ready to Book?
+                    Continue to booking demo
                   </h3>
                   <p className="text-muted-foreground font-body text-sm">
-                    Secure your seat on this bus
+                    Preview the sample payment and confirmation flow.
                   </p>
                 </div>
                 <Button

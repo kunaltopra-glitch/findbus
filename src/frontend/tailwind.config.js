@@ -16,9 +16,9 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ['"Bricolage Grotesque"', "sans-serif"],
-        body: ["Outfit", "sans-serif"],
-        mono: ['"Geist Mono"', "monospace"],
+        display: ["'Segoe UI'", "Arial", "sans-serif"],
+        body: ["'Segoe UI'", "Arial", "sans-serif"],
+        mono: ["ui-monospace", "Consolas", "monospace"],
       },
       colors: {
         "bus-orange": "oklch(var(--orange) / <alpha-value>)",

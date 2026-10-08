@@ -1,4 +1,3 @@
-import React from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "@tanstack/react-router";
 import {
@@ -14,60 +13,61 @@ import {
   Zap,
 } from "lucide-react";
 import { motion } from "motion/react";
+import React from "react";
 
 const STATS = [
-  { label: "Routes Covered", value: "180+", icon: MapPin },
-  { label: "Buses Tracked", value: "1,200+", icon: Navigation },
-  { label: "Daily Passengers", value: "85,000+", icon: Signal },
-  { label: "Uptime", value: "99.8%", icon: Zap },
+  { label: "Sample routes", value: "03", icon: MapPin },
+  { label: "Scheduled departures", value: "09", icon: Navigation },
+  { label: "Journey tools", value: "All in one", icon: Signal },
+  { label: "Booking flow", value: "Simple", icon: Zap },
 ];
 
 const FEATURES = [
   {
     icon: Signal,
-    title: "Live GPS Tracking",
+    title: "Bus details at a glance",
     description:
-      "Real-time bus location updates using cell-tower triangulation and GPS data every 10 seconds.",
+      "Review sample service status, departure times, and route details together.",
     color: "text-[oklch(0.72_0.21_50)]",
     bg: "bg-[oklch(0.72_0.21_50/0.1)]",
   },
   {
     icon: Bot,
-    title: "AI-Powered ETA",
+    title: "Helpful travel assistant",
     description:
-      "Machine learning algorithms predict accurate arrival times based on traffic, stops, and historical patterns.",
+      "Get quick answers about sample routes and how to use the booking experience.",
     color: "text-[oklch(0.55_0.12_264)]",
     bg: "bg-[oklch(0.28_0.12_264/0.1)]",
   },
   {
     icon: Ticket,
-    title: "Digital Ticketing",
+    title: "A clear booking flow",
     description:
-      "Book tickets online, choose your seat, and pay via UPI or card. No queues, no hassle.",
+      "Follow a simple ticket-booking demo from route selection through confirmation.",
     color: "text-[oklch(0.58_0.12_145)]",
     bg: "bg-[oklch(0.6_0.12_145/0.1)]",
   },
   {
     icon: Wifi,
-    title: "Offline Support",
+    title: "Route details in one view",
     description:
-      "Route maps and schedules available offline. Get updates when connectivity resumes.",
+      "Compare the stops and scheduled departures available in the sample network.",
     color: "text-[oklch(0.62_0.14_285)]",
     bg: "bg-[oklch(0.62_0.14_285/0.1)]",
   },
   {
     icon: Shield,
-    title: "Verified Data",
+    title: "Clear service information",
     description:
-      "All data is sourced directly from HRTC systems. Reliable and government-verified information.",
+      "See route and bus information together, with sample data clearly presented.",
     color: "text-[oklch(0.72_0.21_50)]",
     bg: "bg-[oklch(0.72_0.21_50/0.1)]",
   },
   {
     icon: Clock,
-    title: "Real-Time Updates",
+    title: "Useful journey details",
     description:
-      "Get notified about delays, cancellations, and platform changes in real-time via SMS/app alerts.",
+      "Check the details you need to plan a trip without jumping between pages.",
     color: "text-[oklch(0.55_0.12_264)]",
     bg: "bg-[oklch(0.28_0.12_264/0.1)]",
   },
@@ -78,19 +78,19 @@ const HOW_IT_WORKS = [
     step: "01",
     title: "Select Your Route",
     description:
-      "Choose your boarding stop and destination from our comprehensive Haryana Roadways network.",
+      "Choose a boarding stop and destination from the routes in our sample network.",
   },
   {
     step: "02",
-    title: "View Live Bus Position",
+    title: "Review Bus Details",
     description:
-      "Our system queries GPS transponders and cell-tower data to pinpoint your bus on the route map.",
+      "Review sample bus details and service status alongside your selected route.",
   },
   {
     step: "03",
-    title: "Get Accurate ETA",
+    title: "Check scheduled times",
     description:
-      "AI models factor in current speed, traffic conditions, and historical delay patterns for precise timing.",
+      "Compare sample departure and arrival times; schedules are not live ETA predictions.",
   },
 ];
 
@@ -131,22 +131,26 @@ export function HomePage() {
               <div className="inline-flex items-center gap-2 bg-[oklch(0.72_0.21_50/0.18)] border border-[oklch(0.72_0.21_50/0.3)] rounded-full px-4 py-1.5 mb-6">
                 <span className="w-2 h-2 rounded-full bg-[oklch(0.72_0.21_50)] pulse-dot" />
                 <span className="text-[oklch(0.88_0.12_55)] text-xs font-body font-semibold tracking-wider uppercase">
-                  Live Tracking Active
+                  Plan your next journey
                 </span>
               </div>
 
               <h1 className="font-display font-extrabold text-4xl sm:text-5xl lg:text-6xl text-white leading-tight mb-6">
-                <span className="text-[oklch(0.65_0.12_230)]">Track Your</span>
+                <span className="text-[oklch(0.65_0.12_230)]">
+                  Plan your next
+                </span>
                 <br />
-                <span className="text-gradient-orange">Haryana Roadways</span>
+                <span className="text-gradient-orange">bus journey</span>
                 <br />
-                <span className="text-[oklch(0.65_0.12_230)]">Bus Live</span>
+                <span className="text-[oklch(0.65_0.12_230)]">
+                  with Bus Connect.
+                </span>
               </h1>
 
               <p className="text-[oklch(0.78_0.04_250)] font-body text-lg leading-relaxed mb-8 max-w-lg">
-                AI-powered GPS tracking for Haryana Roadways. Know exactly where
-                your bus is, when it arrives, and book tickets instantly — all
-                in one place.
+                Find routes, compare scheduled departures, and explore bus
+                details in one thoughtfully connected place. Start planning your
+                next journey in just a few steps.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-3">
@@ -174,7 +178,7 @@ export function HomePage() {
                   onClick={() => navigate({ to: "/ai-bot" })}
                 >
                   <Bot className="w-4 h-4 mr-2" />
-                  Activate AI Bot
+                  Ask the Assistant
                 </Button>
               </div>
             </motion.div>
@@ -186,7 +190,7 @@ export function HomePage() {
               transition={{ duration: 0.7, delay: 0.2 }}
               className="hidden lg:block"
             >
-              <LiveBusCard />
+              <SampleBusCard />
             </motion.div>
           </div>
 
@@ -229,7 +233,7 @@ export function HomePage() {
             >
               <img
                 src="https://picsum.photos/seed/haryana-bus1/640/400"
-                alt="Haryana Roadways bus on highway"
+                alt="Bus travelling along a highway"
                 className="rounded-2xl shadow-xl w-full object-cover h-64"
                 loading="lazy"
               />
@@ -254,26 +258,24 @@ export function HomePage() {
                 How It Works
               </span>
               <h2 className="font-display font-bold text-3xl sm:text-4xl text-foreground mb-6 leading-tight">
-                Smart Tracking for
+                Smart Tools for
                 <br />
                 <span className="text-gradient-blue">Modern Commuters</span>
               </h2>
               <p className="text-muted-foreground font-body leading-relaxed mb-4">
-                FindBus combines cell-tower triangulation with onboard GPS
-                transponders installed in Haryana Roadways buses. Our AI
-                processes real-time signals to give you accurate location data
-                and estimated times of arrival.
+                Bus Connect brings route discovery, sample schedules, bus
+                details, and ticket booking together, so planning a journey
+                feels straightforward from the start.
               </p>
               <p className="text-muted-foreground font-body leading-relaxed mb-4">
-                Unlike traditional departure boards, our system accounts for
-                traffic, road conditions, and driver break patterns. The more
-                you use it, the smarter it gets — learning your frequent routes
-                and suggesting the best options.
+                Compare stops and departures, then follow a clear path from
+                route search to ticket confirmation. The travel assistant can
+                also point you to useful route and booking information.
               </p>
               <p className="text-muted-foreground font-body leading-relaxed">
-                Integrated with Haryana Government transport systems, all data
-                is verified and updated directly from HRTC's central fleet
-                management system.
+                This preview uses sample routes and bus information. Live
+                schedules, fleet tracking, and real ticketing depend on
+                integrations with the relevant bus operators.
               </p>
             </motion.div>
           </div>
@@ -327,7 +329,7 @@ export function HomePage() {
               Platform Features
             </span>
             <h2 className="font-display font-bold text-3xl sm:text-4xl text-foreground">
-              Built for Haryana's Commuters
+              Made for Every Journey
             </h2>
           </div>
           <motion.div
@@ -364,11 +366,11 @@ export function HomePage() {
       <section className="gradient-hero py-16">
         <div className="max-w-3xl mx-auto px-4 text-center roadway-pattern">
           <h2 className="font-display font-bold text-3xl sm:text-4xl text-white mb-4">
-            Ready to Track Your Bus?
+            Ready to Plan Your Journey?
           </h2>
           <p className="text-[oklch(0.78_0.04_250)] font-body mb-8">
-            Join 85,000+ daily commuters who rely on FindBus for accurate,
-            real-time Haryana Roadways bus tracking.
+            Explore the sample network and see how your next journey can come
+            together with Bus Connect.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button
@@ -394,8 +396,8 @@ export function HomePage() {
   );
 }
 
-// ── Live Bus Preview Card ──────────────────────────────
-function LiveBusCard() {
+// ── Sample Bus Preview Card ─────────────────────────────
+function SampleBusCard() {
   const stops = ["Rohtak", "Jhajjar", "Bhiwani", "Hisar"];
   const currentIdx = 1;
 
@@ -404,7 +406,7 @@ function LiveBusCard() {
       <div className="flex items-center justify-between mb-5">
         <div>
           <p className="text-[oklch(0.75_0.04_250)] text-xs font-body uppercase tracking-wider">
-            Live Tracking
+            Sample Bus Details
           </p>
           <p className="text-white font-display font-bold text-lg">
             HR-10-PA-0231
@@ -413,7 +415,7 @@ function LiveBusCard() {
         <div className="flex items-center gap-1.5 bg-[oklch(0.58_0.12_145/0.2)] border border-[oklch(0.58_0.12_145/0.3)] rounded-full px-3 py-1">
           <span className="w-2 h-2 rounded-full bg-[oklch(0.65_0.18_145)] pulse-dot" />
           <span className="text-[oklch(0.75_0.15_145)] text-xs font-body font-semibold">
-            On Time
+            Sample status
           </span>
         </div>
       </div>
@@ -449,7 +451,7 @@ function LiveBusCard() {
               </span>
               {idx === currentIdx && (
                 <span className="text-xs text-[oklch(0.82_0.18_55)] font-body bg-[oklch(0.72_0.21_50/0.2)] px-2 py-0.5 rounded-full">
-                  Bus Here 🚌
+                  Sample Position
                 </span>
               )}
             </div>
@@ -459,12 +461,14 @@ function LiveBusCard() {
 
       <div className="mt-5 pt-4 border-t border-white/15 grid grid-cols-2 gap-3">
         <div className="text-center">
-          <p className="text-[oklch(0.75_0.04_250)] text-xs font-body">Speed</p>
+          <p className="text-[oklch(0.75_0.04_250)] text-xs font-body">
+            Sample speed
+          </p>
           <p className="text-white font-display font-bold text-xl">62 km/h</p>
         </div>
         <div className="text-center">
           <p className="text-[oklch(0.75_0.04_250)] text-xs font-body">
-            ETA Hisar
+            Scheduled arrival · Hisar
           </p>
           <p className="text-white font-display font-bold text-xl">09:30 AM</p>
         </div>

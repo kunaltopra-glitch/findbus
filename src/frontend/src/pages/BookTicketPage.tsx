@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useNavigate } from "@tanstack/react-router";
-import { ArrowRight, Info, MapPin, Ticket, Search } from "lucide-react";
+import { ArrowRight, Info, MapPin, Search, Ticket } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
 import { toast } from "sonner";

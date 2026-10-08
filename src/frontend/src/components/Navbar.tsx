@@ -1,5 +1,5 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { Bus, Menu, X } from "lucide-react";
+import { ArrowRight, Bus, Menu, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 
@@ -29,7 +29,7 @@ export function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 border-b border-white/10 transition-all duration-300 ${
         scrolled
           ? "bg-[oklch(0.24_0.14_264/0.97)] nav-blur shadow-lg"
           : "bg-[oklch(0.22_0.13_264)]"
@@ -44,10 +44,10 @@ export function Navbar() {
             </div>
             <div>
               <span className="text-white font-display font-bold text-xl tracking-tight">
-                Find<span className="text-[oklch(0.82_0.18_55)]">Bus</span>
+                Bus <span className="text-[oklch(0.82_0.18_55)]">Connect</span>
               </span>
               <p className="text-[oklch(0.75_0.04_250)] text-[10px] font-body leading-none tracking-wider uppercase">
-                Haryana Roadways
+                One network. Every journey.
               </p>
             </div>
           </Link>
@@ -77,6 +77,14 @@ export function Navbar() {
               );
             })}
           </div>
+
+          <Link
+            to="/find-bus"
+            className="hidden lg:inline-flex items-center gap-2 rounded-full bg-[oklch(0.72_0.21_50)] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[oklch(0.66_0.21_48)]"
+          >
+            Plan a journey
+            <ArrowRight className="h-4 w-4" />
+          </Link>
 
           {/* Mobile Menu Button */}
           <button

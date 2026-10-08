@@ -23,62 +23,6 @@ export const DEMO_ROUTES: Route[] = [
     toStop: "Delhi",
     stops: ["Panipat", "Sonipat", "Bahadurgarh", "Delhi"],
   },
-  {
-    id: "route-4",
-    name: "Yamunanagar → Saraswati Nagar",
-    fromStop: "Yamunanagar",
-    toStop: "Saraswati Nagar",
-    stops: ["Yamunanagar", "Vishwakarma Chowk", "Jorion", "Mandebar", "Gohlanpur", "Harnaul", "Chhota Topra", "Badanpuri", "Ismailpur", "Topra Kalan", "Sagri", "Kheri Lakha Singh", "Masana", "Satgoli", "Rapoli", "Kajibans", "Saraswati Nagar"],
-  },
-  {
-    id: "route-5",
-    name: "Yamunanagar → Saraswati Nagar",
-    fromStop: "Yamunanagar",
-    toStop: "Saraswati Nagar",
-    stops: ["Yamunanagar", "Vishwakarma Chowk", "Jorion", "Mandebar", "Gohlanpur", "Harnaul", "Chhota Topra", "Badanpuri", "Ismailpur", "Topra Kalan", "Sagri", "Kheri Lakha Singh", "Antawa", "Hartan", "Bhogpur", "Ghari", "Saraswati Nagar"],
-  },
-  {
-    id: "route-6",
-    name: "Yamunanagar → Barara",
-    fromStop: "Yamunanagar",
-    toStop: "Barara",
-    stops: ["Yamunanagar", "Vishwakarma Chowk", "Jorion", "Mandebar", "Gohlanpur", "Harnaul", "Chhota Topra", "Badanpuri", "Ismailpur", "Topra Kalan", "Sagri", "Kheri Lakha Singh", "Antawa", "Hartan", "Bhogpur", "Jamalpur","Adhoya", "Barara"],
-  },
-  {
-    id: "route-7",
-    name: "Yamunanagar → Saraswati Nagar",
-    fromStop: "Yamunanagar",
-    toStop: "Saraswati Nagar",
-    stops: ["Yamunanagar", "Vishwakarma Chowk", "Jorion", "Mandebar", "Gohlanpur", "Harnaul", "Retgarh", "Hafizpur", "Ismailpur", "Jhaguri","Nagla", "Sagri", "Kheri Lakha Singh", "Masana", "Satgoli", "Rapoli", "Kajibans", "Saraswati Nagar"],
-  }, 
-  {
-    id: "route-8",
-    name: "Saraswati Nagar → Yamunanagar Via Harnaul",
-    fromStop: "Saraswati Nagar",
-    toStop: "Yamunanagar",
-    stops: ["Saraswati Nagar", "Kajibans", "Rapoli", "Satgoli", "Masana", "Kheri Lakha Singh", "Sagri", "Topra Kalan", "Ismailpur", "Badanpuri", "Chhota Topra", "Harnaul", "Gohlanpur", "Mandebar", "Jorion", "Vishwakarma Chowk", "Yamunanagar"],
-  }, 
-{
-    id: "route-9",
-    name: "Saraswati Nagar → Yamunanagar Via Harnaul",
-    fromStop: "Saraswati Nagar",
-    toStop: "Yamunanagar",
-    stops: ["Saraswati Nagar", "Ghari", "Bhogpur", "Hartan", "Antawa", "Kheri Lakha Singh", "Sagri", "Topra Kalan", "Ismailpur", "Badanpuri", "Chhota Topra", "Harnaul", "Gohlanpur", "Mandebar", "Jorion", "Vishwakarma Chowk", "Yamunanagar"],
-  },
-  {
-    id: "route-10",
-    name: "Barara → Yamunanagar",
-    fromStop: "Barara",
-    toStop: "Yamunanagar",
-    stops: ["Barara", "Adhoya", "Jamalpur", "Bhogpur", "Hartan", "Antawa", "Kheri Lakha Singh", "Sagri", "Topra Kalan", "Ismailpur", "Badanpuri", "Chhota Topra", "Harnaul", "Gohlanpur", "Mandebar", "Jorion", "Vishwakarma Chowk", "Yamunanagar"],
-  },
-  {
-    id: "route-11",
-    name: "Saraswati Nagar → Yamunanagar Via Hafizpur",
-    fromStop: "Saraswati Nagar",
-    toStop: "Yamunanagar",
-    stops: ["Saraswati Nagar", "Kajibans", "Rapoli", "Satgoli", "Masana", "Kheri Lakha Singh", "Sagri", "Nagla", "Jhaguri", "Ismailpur", "Hafizpur", "Retgarh", "Harnaul", "Gohlanpur", "Mandebar", "Jorion", "Vishwakarma Chowk", "Yamunanagar"],
-  }, 
 ];
 
 // ── Helper to generate nanosecond timestamps ───────────
@@ -181,7 +125,7 @@ export const DEMO_TIMINGS: BusTiming[] = [
     id: "timing-6a",
     busId: "bus-12",
     routeId: "route-6",
-    departureTime: timeFromHHMM(17, 0 ),
+    departureTime: timeFromHHMM(17, 0),
     arrivalTime: timeFromHHMM(18, 30),
   },
   {
@@ -414,7 +358,7 @@ export const DEMO_BUSES: Bus[] = [
     currentStopIndex: BigInt(0),
   },
   {
-    id: "bus-15", 
+    id: "bus-15",
     busNumber: "HR-10-PA-0236",
     driverID: "DRV-2046",
     conductorID: "CND-3087",
@@ -425,7 +369,7 @@ export const DEMO_BUSES: Bus[] = [
     currentStopIndex: BigInt(1),
   },
   {
-    id: "bus-16", 
+    id: "bus-16",
     busNumber: "HR-10-PA-0237",
     driverID: "DRV-2047",
     conductorID: "CND-3088",
@@ -456,7 +400,7 @@ export const DEMO_BUSES: Bus[] = [
     status: "OnTime" as BusStatus,
     speed: 62,
     currentStopIndex: BigInt(1),
-   },
+  },
 ];
 
 // ── Helper functions ───────────────────────────────────

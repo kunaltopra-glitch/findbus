@@ -1,8 +1,20 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { useNavigate } from "@tanstack/react-router";
-import { ArrowRight, ChevronDown, Info, Loader2, MapPin, Navigation, Search } from "lucide-react";
+import {
+  ArrowRight,
+  ChevronDown,
+  Info,
+  Loader2,
+  MapPin,
+  Navigation,
+  Search,
+} from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -153,8 +165,7 @@ export function FindBusPage() {
               Find Your Bus
             </h1>
             <p className="text-[oklch(0.75_0.04_250)] font-body max-w-xl mx-auto">
-              Search for live bus timings and track your Haryana Roadways bus on
-              any route.
+              Explore available sample routes and scheduled bus departures.
             </p>
           </motion.div>
         </div>
@@ -222,7 +233,9 @@ export function FindBusPage() {
                     onChange={(v) => setToStop(v)}
                     options={filteredToStops}
                     placeholder={
-                      fromStop ? "Select destination stop" : "Select From stop first"
+                      fromStop
+                        ? "Select destination stop"
+                        : "Select From stop first"
                     }
                     search={toSearch}
                     setSearch={setToSearch}

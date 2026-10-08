@@ -2,23 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ── Font Declarations ────────────────────────────────── */
-@font-face {
-  font-family: "Bricolage Grotesque";
-  src: url("/assets/fonts/BricolageGrotesque[opsz,wdth,wght].woff2") format("woff2");
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Outfit";
-  src: url("/assets/fonts/Outfit[wght].woff2") format("woff2");
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
-
 /* ── Design Tokens ────────────────────────────────────── */
 @layer base {
   :root {
@@ -98,12 +81,30 @@
 /* ── Custom Utilities ────────────────────────────────── */
 @layer utilities {
   .gradient-hero {
-    background: linear-gradient(
+    background-color: oklch(0.24 0.14 264);
+    background-image: linear-gradient(
       135deg,
       oklch(0.24 0.14 264) 0%,
       oklch(0.3 0.15 250) 40%,
       oklch(0.22 0.12 270) 100%
     );
+  }
+
+  .gradient-hero.roadway-pattern {
+    background-image:
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 10px,
+        oklch(1 0 0 / 0.04) 10px,
+        oklch(1 0 0 / 0.04) 11px
+      ),
+      linear-gradient(
+        135deg,
+        oklch(0.24 0.14 264) 0%,
+        oklch(0.3 0.15 250) 40%,
+        oklch(0.22 0.12 270) 100%
+      );
   }
 
   .gradient-orange {

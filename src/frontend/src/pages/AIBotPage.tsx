@@ -35,12 +35,12 @@ const BOT_RESPONSES: Array<{
   {
     patterns: ["hello", "hi", "hey", "namaste", "helo"],
     response: () =>
-      "Namaste! 🙏 I'm FindBus AI Assistant. I can help you track Haryana Roadways buses, check ETAs, find routes, and more. How can I assist you today?",
+      "Namaste! 🙏 I'm the Bus Connect travel assistant. I can help you explore sample routes, scheduled departures, and the booking demo. What would you like to know?",
   },
   {
     patterns: ["help", "what can", "what do you", "features", "options"],
     response: () =>
-      "I can help you with:\n\n🚌 **Bus Location** – Ask 'Where is my bus?'\n⏰ **ETA** – Ask 'When will my bus arrive?'\n🗺️ **Routes** – Ask 'Show me routes'\n📋 **Bus Info** – Ask 'Bus details for HR-10-PA-0231'\n🎫 **Booking** – Ask 'How to book a ticket?'\n\nJust type your question!",
+      "I can help you with:\n\n🚌 **Bus details** – Ask 'Where is my bus?'\n⏰ **Schedules** – Ask 'What is the ETA?'\n🗺️ **Routes** – Ask 'Show me routes'\n🎫 **Booking** – Ask 'How do I book a ticket?'\n\nThis preview uses sample information, not live operator data.",
   },
   {
     patterns: [
@@ -52,7 +52,7 @@ const BOT_RESPONSES: Array<{
       "bus kahan hai",
     ],
     response: () =>
-      "📍 **Live Location Update:**\n\nBus HR-10-PA-0231 is currently at **Jhajjar** on Route: Rohtak → Hisar.\n\n• Distance to Hisar: ~85 km\n• Current Speed: 62 km/h\n• Next Stop: Bhiwani (ETA: 35 mins)\n\nThe bus is running ON TIME. 🟢",
+      "📍 This preview is not connected to live bus tracking. Bus locations, speeds, and statuses shown in the demo are sample details; check with the bus operator for current information.",
   },
   {
     patterns: [
@@ -65,7 +65,7 @@ const BOT_RESPONSES: Array<{
       "time",
     ],
     response: () =>
-      "⏰ **Estimated Arrival Times:**\n\n🟢 HR-10-PA-0231 → Hisar: **9:30 AM** (On Time)\n🟡 HR-55-AB-1190 → Hisar: **2:15 PM** (+20 min delay)\n🟢 HR-26-AB-5567 → Chandigarh: **11:30 AM** (On Time)\n🟢 HR-07-PA-9910 → Delhi: **8:00 AM** (On Time)\n\nNote: Times update every 30 seconds based on live GPS data.",
+      "⏰ The departure and arrival times shown in Bus Connect are sample schedules. They are not live ETAs and may not reflect an operator's current service. Choose Find Bus to browse the sample routes.",
   },
   {
     patterns: [
@@ -77,7 +77,7 @@ const BOT_RESPONSES: Array<{
       "raasta",
     ],
     response: () =>
-      `🗺️ **Available Routes:**\n\n${DEMO_ROUTES_LIST.join("\n")}\n\nAll routes have 3 daily services. Would you like timings for a specific route?`,
+      `🗺️ **Sample Routes:**\n\n${DEMO_ROUTES_LIST.join("\n")}\n\nThese example routes and schedules are for preview purposes.`,
   },
   {
     patterns: ["rohtak", "hisar"],
@@ -97,34 +97,34 @@ const BOT_RESPONSES: Array<{
   {
     patterns: ["book", "ticket", "booking", "reserve"],
     response: () =>
-      "🎫 **How to Book a Ticket:**\n\n1. Go to **Book Ticket** page\n2. Select From and To stops\n3. Choose your bus timing\n4. Enter passenger details\n5. Pay via UPI or Card\n6. Get your digital ticket instantly!\n\n💡 **Tip:** Book at least 30 minutes before departure for guaranteed seats.",
+      "🎫 **Explore the booking demo:**\n\n1. Open **Book Ticket**\n2. Select From and To stops\n3. Choose a sample departure\n4. Follow the on-screen demo steps\n\nNo seat is reserved and no payment is processed.",
   },
   {
     patterns: ["cancel", "refund", "cancellation"],
     response: () =>
-      "🔄 **Cancellation Policy:**\n\n• Cancel within **1 hour** of booking: Full refund\n• Cancel **2-4 hours** before departure: 75% refund\n• Cancel **less than 2 hours**: No refund\n\nTo cancel: Go to **Customer Support** page or call 1800-180-2345.",
+      "This preview does not create real bookings, so it cannot process cancellations or refunds. For an actual journey, check the policy of the bus operator or ticket provider.",
   },
   {
     patterns: ["fare", "price", "cost", "kitna", "charge"],
     response: () =>
-      "💰 **Fare Structure:**\n\n🚌 Non-AC Ordinary: ₹80–₹150\n🚌 Non-AC Express: ₹120–₹250\n❄️ AC Express: ₹200–₹350\n✨ AC Volvo: ₹250–₹450\n\n*Fares are approximate. Final fare depends on distance and bus type.*",
+      "Fare information is not configured in this preview. Please confirm current fares with the bus operator before travelling.",
   },
   {
     patterns: ["bus number", "hr-10", "hr-55", "hr-26", "hr-07"],
     response: (input: string) => {
       const match = input.match(/hr[-\s]?\d+[-\s]?[a-z]*[-\s]?\d+/i);
-      return `🔍 **Bus Details:**\n\nBus: **${match?.[0]?.toUpperCase() ?? "HR-10-PA-0231"}**\n• Driver: DRV-2041\n• Conductor: CND-3082\n• Type: Non-AC Volvo\n• Route: Rohtak → Hisar\n• Status: 🟢 On Time\n• Current Speed: 62 km/h\n• Current Stop: Jhajjar`;
+      return `🔍 **Sample Bus Details:**\n\nBus: **${match?.[0]?.toUpperCase() ?? "HR-10-PA-0231"}**\n\nThe bus details in this preview are illustrative and are not connected to live operator or vehicle data.`;
     },
   },
   {
     patterns: ["speed", "how fast", "kitni speed"],
     response: () =>
-      "⚡ **Bus Speed Update:**\n\n🚌 HR-10-PA-0231: 62 km/h (Rohtak–Hisar)\n🚌 HR-26-AB-5567: 70 km/h (Gurugram–Chandigarh)\n🚌 HR-44-BB-2234: 75 km/h (Panipat–Delhi)\n\nSpeeds update in real-time from GPS transponders.",
+      "Speed values shown in the bus details are sample values only. This preview does not receive live GPS updates.",
   },
   {
     patterns: ["thank", "thanks", "shukriya", "dhanyawad"],
     response: () =>
-      "You're welcome! 😊 Safe travels and have a great journey on Haryana Roadways. Is there anything else I can help you with?",
+      "You're welcome! 😊 I hope Bus Connect makes planning your next journey a little easier.",
   },
 ];
 
@@ -135,7 +135,7 @@ function getBotResponse(input: string): string {
       return entry.response(lower);
     }
   }
-  return "🤔 I'm not sure about that. Try asking:\n• 'Where is my bus?'\n• 'What is the ETA?'\n• 'Show routes'\n• 'How to book a ticket?'\n\nOr call our helpline: **1800-180-2345** for live assistance.";
+  return "🤔 I can help with sample bus details, schedules, routes, and the booking demo. Try asking 'Show routes' or 'How do I book a ticket?' For current service information, contact the bus operator directly.";
 }
 
 function speak(text: string) {
@@ -161,7 +161,7 @@ export function AIBotPage() {
     {
       id: "welcome",
       role: "bot",
-      text: "Namaste! 🙏 I'm FindBus AI Assistant. I can help you track Haryana Roadways buses, check ETAs, find routes, and more. How can I assist you today?",
+      text: "Namaste! 🙏 I'm the Bus Connect travel assistant. I can help you explore sample routes, scheduled departures, and the booking demo. What would you like to know?",
       timestamp: new Date(),
     },
   ]);
@@ -278,7 +278,7 @@ export function AIBotPage() {
               </span>
             </div>
             <h1 className="font-display font-extrabold text-3xl sm:text-4xl text-white mb-3">
-              FindBus AI Bot
+              Bus Connect Travel Assistant
             </h1>
             <p className="text-[oklch(0.75_0.04_250)] font-body max-w-xl mx-auto">
               Ask anything about bus locations, timings, routes, or bookings.
@@ -304,7 +304,7 @@ export function AIBotPage() {
               </div>
               <div>
                 <p className="font-display font-bold text-white text-sm">
-                  FindBus AI
+                  Bus Connect Assistant
                 </p>
                 <div className="flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-[oklch(0.65_0.18_145)] pulse-dot" />

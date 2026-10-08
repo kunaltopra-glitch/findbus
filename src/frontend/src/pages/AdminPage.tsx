@@ -54,7 +54,7 @@ export function AdminPage() {
               </div>
             </div>
             <p className="text-[oklch(0.6_0.04_250)] font-body text-sm">
-              Administrative controls for FindBus – Haryana Roadways
+              Administrative controls for Bus Connect
             </p>
           </motion.div>
         </div>

@@ -1,4 +1,4 @@
-# Find Bus
+# Bus Connect
 
 ## Current State
 New project — no existing code.
@@ -6,7 +6,7 @@ New project — no existing code.
 ## Requested Changes (Diff)
 
 ### Add
-- Full-stack Haryana Roadways bus tracking web app
+- Bus route discovery and ticket-booking demo for multiple bus operators
 - Home page with hero section, about section, smooth animations
 - Find Bus page: route selection form (From/To dropdowns, 3 demo routes), redirects to bus timing page
 - Bus Selection page: 3 demo bus timings per route, each with "Find Bus" button

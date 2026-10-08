@@ -105,12 +105,13 @@ export function useBookTicket() {
 
 export function useUpdateBusPosition() {
   const { actor } = useActor();
-  return useMutation({
+  const mutation = useMutation({
     mutationFn: async (params: { busId: string; currentStopIndex: bigint }) => {
       if (!actor) throw new Error("No actor available");
       await actor.updateBusPosition(params.busId, params.currentStopIndex);
     },
   });
+  return { ...mutation, isBackendAvailable: !!actor };
 }
 
 export function useAddRoute() {

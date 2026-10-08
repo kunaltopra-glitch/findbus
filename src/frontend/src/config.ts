@@ -27,10 +27,10 @@ interface Config {
   ii_derivation_origin?: string;
 }
 
-let configCache: Config | null = null;
+let configCache: Config | null | undefined;
 
-export async function loadConfig(): Promise<Config> {
-  if (configCache) {
+export async function loadConfig(): Promise<Config | null> {
+  if (configCache !== undefined) {
     return configCache;
   }
   const backendCanisterId = process.env.CANISTER_ID_BACKEND;
@@ -39,17 +39,19 @@ export async function loadConfig(): Promise<Config> {
   try {
     const response = await fetch(`${baseUrl}env.json`);
     const config = (await response.json()) as JsonConfig;
-    if (!backendCanisterId && config.backend_canister_id === "undefined") {
-      console.error("CANISTER_ID_BACKEND is not set");
-      throw new Error("CANISTER_ID_BACKEND is not set");
+    const configuredCanisterId =
+      config.backend_canister_id === "undefined"
+        ? backendCanisterId
+        : config.backend_canister_id;
+    if (!configuredCanisterId) {
+      configCache = null;
+      return configCache;
     }
 
     const fullConfig = {
       backend_host:
         config.backend_host === "undefined" ? undefined : config.backend_host,
-      backend_canister_id: (config.backend_canister_id === "undefined"
-        ? backendCanisterId
-        : config.backend_canister_id) as string,
+      backend_canister_id: configuredCanisterId,
       storage_gateway_url: process.env.STORAGE_GATEWAY_URL ?? "nogateway",
       bucket_name: DEFAULT_BUCKET_NAME,
       project_id:
@@ -63,10 +65,9 @@ export async function loadConfig(): Promise<Config> {
     };
     configCache = fullConfig;
     return fullConfig;
-  } catch {
+  } catch (error) {
     if (!backendCanisterId) {
-      console.error("CANISTER_ID_BACKEND is not set");
-      throw new Error("CANISTER_ID_BACKEND is not set");
+      throw error;
     }
     const fallbackConfig = {
       backend_host: undefined,
@@ -76,7 +77,8 @@ export async function loadConfig(): Promise<Config> {
       project_id: DEFAULT_PROJECT_ID,
       ii_derivation_origin: undefined,
     };
-    return fallbackConfig;
+    configCache = fallbackConfig;
+    return configCache;
   }
 }
 
@@ -118,7 +120,7 @@ async function maybeLoadMockBackend(): Promise<backendInterface | null> {
 
 export async function createActorWithConfig(
   options?: CreateActorOptions,
-): Promise<backendInterface> {
+): Promise<backendInterface | null> {
   // Attempt to load mock backend if enabled
   const mock = await maybeLoadMockBackend();
   if (mock) {
@@ -126,6 +128,9 @@ export async function createActorWithConfig(
   }
 
   const config = await loadConfig();
+  if (!config) {
+    return null;
+  }
   const resolvedOptions = options ?? {};
   const agent = new HttpAgent({
     ...resolvedOptions.agentOptions,
